@@ -1,0 +1,70 @@
+{
+  "name": "dsh-cross-session-agent",
+  "version": "0.1.0",
+  "packageManager": "pnpm@11.1.1",
+  "description": "Unofficial bounded peer discovery, messaging, receipts, and safe context projection for DeepSeek Harness agents.",
+  "keywords": ["deepseek", "deepseek-harness", "agent", "multi-agent", "cross-session", "context"],
+  "homepage": "https://github.com/dd2673/dsh-cross-session-agent#readme",
+  "bugs": { "url": "https://github.com/dd2673/dsh-cross-session-agent/issues" },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dd2673/dsh-cross-session-agent.git"
+  },
+  "type": "module",
+  "main": "./lib/index.js",
+  "scripts": { "test": "node --test" },
+  "exports": {
+    ".": { "default": "./lib/index.js" },
+    "./client": { "default": "./lib/client.js" },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "AGENTS.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "NOTICE.md",
+    "PRIVACY.md",
+    "README.en.md",
+    "README.md",
+    "SECURITY.md",
+    "TDD_CONTRACT.md",
+    "cordis.patch.yml",
+    "docs/architecture-v2.md",
+    "docs/assets/message-header-navigation.jpg",
+    "lib"
+  ],
+  "publishConfig": { "access": "public" },
+  "dsh": {
+    "bundle": { "patch": "./cordis.patch.yml" },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-runtime",
+        "@deepseek-ai/dsh-client-ui-slots",
+        "@deepseek-ai/dsh-client-ui-conversation",
+        "@deepseek-ai/dsh-client-ui-input-trigger",
+        "@deepseek-ai/dsh-client-ui-primitives"
+      ]
+    }
+  },
+  "dshx": {
+    "contributes": {
+      "tools": ["list_peer_agents", "send_agent_message", "check_delivery", "get_peer_context"],
+      "skills": []
+    }
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.1",
+    "@deepseek-ai/dsh-llm": ">=0.1.0-rc.6 <0.2.0",
+    "@deepseek-ai/dsh-tools": ">=0.1.0-rc.6 <0.2.0"
+  },
+  "devDependencies": {
+    "@deepseek-ai/dsh-llm": "0.1.0-rc.6",
+    "@deepseek-ai/dsh-tools": "0.1.0-rc.6"
+  },
+  "engines": {
+    "node": ">=24 <25",
+    "dsh": ">=0.1.0-rc.6 <0.2.0"
+  },
+  "license": "MIT"
+}

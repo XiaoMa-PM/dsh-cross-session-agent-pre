@@ -1,4 +1,4 @@
-# dsh-cross-session-agent
+# dsh-cross-session-agent-pre
 
 [English](./README.en.md) | 中文
 
@@ -21,7 +21,7 @@
 从 GitHub 安装：
 
 ```sh
-dsh plugin --profile web add github:XiaoMa-PM/dsh-cross-session-agent
+dsh plugin --profile web add github:XiaoMa-PM/dsh-cross-session-agent-pre
 ```
 
 包内的 `cordis.patch.yml` 会把 `dsh-cross-session-agent` 挂入当前 profile。无需手动改宿主配置。它贡献以下工具：

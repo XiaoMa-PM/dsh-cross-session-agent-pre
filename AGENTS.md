@@ -1,4 +1,4 @@
-# dsh-cross-session-agent Guidelines
+# dsh-cross-session-agent-pre Guidelines
 
 > Unofficial project. It is not affiliated with, endorsed by, or supported by
 > DeepSeek or DeepSeek Harness.

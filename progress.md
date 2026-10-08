@@ -1,5 +1,11 @@
 # Progress
 
+## 2026-10-08 — Preview adaptation naming
+
+- User chose dsh-cross-session-agent-pre; package, bundle and Web module identities renamed.
+- Upstream links and source protocol remain unchanged; no external Claude Code support added in this release.
+- GitHub repository and community automation use the new name; version 0.2.0-rc.2.3.
+
 ## 2026-10-08 — DSH 0.2.0-rc.2 adaptation prepared for public release
 
 - Adapted public Session queries, inherited fork receipt boundaries and Web sender cards/navigation.

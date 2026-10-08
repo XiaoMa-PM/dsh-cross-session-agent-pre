@@ -72,7 +72,7 @@ test('会话状态变化只刷新已识别的会话链接，不重新扫描整�
     globalThis.window = { __ModuleLoader__: { load: (definition) => { loaded = definition } } }
     await import('../lib/client.js?runtime-test')
 
-    assert.equal(loaded.id, 'dsh-cross-session-agent')
+    assert.equal(loaded.id, 'dsh-cross-session-agent-pre')
 
     const React = {
       createElement: (type, props, ...children) => {
@@ -90,7 +90,7 @@ test('会话状态变化只刷新已识别的会话链接，不重新扫描整�
       }
       throw new Error('unexpected client dependency: ' + id)
     })
-    assert.equal(client.name, 'dsh-cross-session-agent-client')
+    assert.equal(client.name, 'dsh-cross-session-agent-pre-client')
     const workspaces = {
       list: {
         getSnapshot: () => ({ archivedSessionIds: [] }),

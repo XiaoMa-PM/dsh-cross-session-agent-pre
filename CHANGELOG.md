@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.0-rc.2.3 - 2026-10-08
+
+- Rename the maintained adaptation to dsh-cross-session-agent-pre, including bundle and Web module identities.
+- Preserve upstream attribution and the existing message protocol; no new historical compatibility layer.
+
 ## 0.2.0-rc.2.2 - 2026-10-08
 
 - Render peer context and turn-trigger nodes through the public Chat node slot.

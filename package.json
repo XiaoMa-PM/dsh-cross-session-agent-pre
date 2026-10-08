@@ -1,6 +1,6 @@
 {
-  "name": "dsh-cross-session-agent",
-  "version": "0.2.0-rc.2.2",
+  "name": "dsh-cross-session-agent-pre",
+  "version": "0.2.0-rc.2.3",
   "packageManager": "pnpm@11.1.1",
   "description": "Unofficial bounded peer discovery, messaging, receipts, and safe context projection for DeepSeek Harness agents.",
   "keywords": [
@@ -11,13 +11,13 @@
     "cross-session",
     "context"
   ],
-  "homepage": "https://github.com/XiaoMa-PM/dsh-cross-session-agent#readme",
+  "homepage": "https://github.com/XiaoMa-PM/dsh-cross-session-agent-pre#readme",
   "bugs": {
-    "url": "https://github.com/XiaoMa-PM/dsh-cross-session-agent/issues"
+    "url": "https://github.com/XiaoMa-PM/dsh-cross-session-agent-pre/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/XiaoMa-PM/dsh-cross-session-agent.git"
+    "url": "git+https://github.com/XiaoMa-PM/dsh-cross-session-agent-pre.git"
   },
   "type": "module",
   "main": "./lib/index.js",

@@ -1,4 +1,4 @@
-# dsh-cross-session-agent
+# dsh-cross-session-agent-pre
 
 English | [中文](./README.md)
 
@@ -34,7 +34,7 @@ approval.
 Install from GitHub:
 
 ```sh
-dsh plugin --profile web add github:XiaoMa-PM/dsh-cross-session-agent
+dsh plugin --profile web add github:XiaoMa-PM/dsh-cross-session-agent-pre
 ```
 
 Its bundled `cordis.patch.yml` mounts `dsh-cross-session-agent` into the active

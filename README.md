@@ -18,6 +18,12 @@
 
 ## 安装
 
+已发布 npm 包，在 DSH 添加插件窗口输入 `dsh-cross-session-agent-pre` 即可。当前发布版本为 `0.2.0-rc.2.4`；国内镜像可能需要等待同步。也可通过命令安装：
+
+```sh
+dsh plugin --profile web add dsh-cross-session-agent-pre
+```
+
 从 GitHub 安装：
 
 ```sh
@@ -89,7 +95,7 @@ node scripts/live-profile-e2e.mjs http://127.0.0.1:3080
 
 ## 本地适配验证
 
-当前版本针对 DeepSeek Harness 0.2.0-rc.2。在线与离线回执统一通过公开 sessionQuery 读取，使用 inheritedEventCount 排除 fork 继承事件。跨工作区仅传递消息；get_peer_context 仍限制同工作区。已在独立 test-home 中完成真实模型双向回复、空闲唤醒、运行中 followup 排队、宿主重启恢复、旧回执恢复和跨工作区上下文读取拒绝验收。当前版本 0.2.0-rc.2.2 仅针对 Harness 0.2.0-rc.2。
+当前版本针对 DeepSeek Harness 0.2.0-rc.2。在线与离线回执统一通过公开 sessionQuery 读取，使用 inheritedEventCount 排除 fork 继承事件。跨工作区仅传递消息；get_peer_context 仍限制同工作区。已在独立 test-home 中完成真实模型双向回复、空闲唤醒、运行中 followup 排队、宿主重启恢复、旧回执恢复和跨工作区上下文读取拒绝验收。当前版本 0.2.0-rc.2.4 仅针对 Harness 0.2.0-rc.2。
 
 新版来信通过公开 conversation.chat.node 展示发送方与正文，点击使用 uiWorkspace.openSession 跳转。其他来源保留官方渲染。
 

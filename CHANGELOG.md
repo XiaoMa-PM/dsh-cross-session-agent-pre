@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.0-rc.2.4 - 2026-10-08
+
+- Increment version for npm publication after 0.2.0-rc.2.3 was reserved by staged publishing. No runtime changes.
+
 ## 0.2.0-rc.2.3 - 2026-10-08
 
 - Rename the maintained adaptation to dsh-cross-session-agent-pre, including bundle and Web module identities.

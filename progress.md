@@ -1,5 +1,15 @@
 # Progress
 
+## 2026-10-08 — npm accepted publication
+
+- npm 11.15.0 accepted dsh-cross-session-agent-pre@0.2.0-rc.2.4 under latest/public; registry processing and mirror availability checked separately.
+- No runtime changes; GitHub documentation now includes bare-name installation.
+
+## 2026-10-08 — npm version reservation
+
+- Registry rejects both direct and staged publication of 0.2.0-rc.2.3 as previously staged, while the public endpoint only exposes 0.0.0-stage.
+- Increment to 0.2.0-rc.2.4 without runtime changes, preserving package identity and upstream attribution.
+
 ## 2026-10-08 — Preview adaptation naming
 
 - User chose dsh-cross-session-agent-pre; package, bundle and Web module identities renamed.

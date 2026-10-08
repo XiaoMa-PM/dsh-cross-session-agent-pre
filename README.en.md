@@ -31,6 +31,14 @@ approval.
 
 ## Install
 
+The package is published on npm. Enter `dsh-cross-session-agent-pre` in the DSH Add Plugin dialog, or run:
+
+```sh
+dsh plugin --profile web add dsh-cross-session-agent-pre
+```
+
+Current published version: `0.2.0-rc.2.4`. Registry mirrors may synchronize later.
+
 Install from GitHub:
 
 ```sh

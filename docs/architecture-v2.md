@@ -2,15 +2,15 @@
 
 > Status: active product and implementation contract
 >
-> Version: 0.1.0, 2026-08-15
+> Version: 0.2.0-rc.2.2 (local validation), 2026-10-08
 >
 > **Unofficial.** Not affiliated with, endorsed by, or supported by DeepSeek or
 > DeepSeek Harness.
 
 ## Purpose
 
-The plugin coordinates independent Harness Sessions working in the same
-repository. It provides peer discovery, explicit messaging and receipts, and a
+The plugin coordinates independent Harness Sessions, including message exchange
+between different workspaces. Context projection remains restricted to the same cwd. It provides peer discovery, explicit messaging and receipts, and a
 strictly bounded context/activity projection. The product objective is to avoid
 conflicting file ownership, duplicate work, and blocked handoffs while retaining
 the Harness as the only owner of session state.
@@ -107,3 +107,11 @@ substitute for real Harness acceptance.
 
 See [TDD_CONTRACT.md](../TDD_CONTRACT.md), [PRIVACY.md](../PRIVACY.md), and
 [SECURITY.md](../SECURITY.md) for the normative security and data contract.
+
+## Harness 0.2.0-rc.2 receipt reads
+
+Both live and cold delivery receipts use public sessionQuery.readSession. The snapshot inheritedEventCount excludes the fork-inherited prefix. Live pending IDs come from the native Inbox; claimed and discarded IDs come from native inbox splice events. No Session.events access or separate mailbox is used.
+
+## Harness 0.2.0-rc.2 Web rendering
+
+Peer relay messages render through the public conversation.chat.node keyed slot for context and turn-trigger. The plugin owns priority -1; other source kinds delegate to the shipped priority-0 renderer. Sender links navigate through uiWorkspace.openSession using the durable source senderSessionId. The protocol header is removed only when its sender matches the durable source. Title updates follow the public session list observable. No permission or Host-message semantics change.

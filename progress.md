@@ -1,0 +1,10 @@
+# Progress
+
+## 2026-10-08 — DSH 0.2.0-rc.2 adaptation prepared for public release
+
+- Adapted public Session queries, inherited fork receipt boundaries and Web sender cards/navigation.
+- 52 automated cases passed 20 repeated runs; real-model six-direction messaging has successful evidence, with fresh-session retests.
+- Codex subscription rate limits and stale instructions after canceled turns remain continuity limitations. External Claude Code and cross-machine routing are not supported.
+- Preserved dd2673 and GengDaPeng upstream attribution and MIT license. Target GitHub owner: XiaoMa-PM.
+- GitHub Release publication must not automatically publish the upstream npm package; inherited npm release workflow removed.
+- Authenticated as XiaoMa-PM; public upstream fork created on 2026-10-08 at 13:49:43 UTC. GitHub release prepared; community listing must wait until the repository is one day old.

@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
+import { Session } from '@deepseek-ai/dsh-session'
 
 import { apply, inject } from '../lib/index.js'
 
@@ -40,6 +41,12 @@ function setup({ agents: initialAgents = [], services = {}, config = {} } = {}) 
     get(name) {
       if (name === 'workspaceRegistry') return services.workspaceRegistry ?? { archivedSessionIds: [] }
       if (name === 'sessionTitle') return services.sessionTitle ?? { get: (session) => ({ title: session.agentTitle ?? '发送者' }) }
+      if (name === 'sessionQuery' && services[name] === undefined) return {
+        readSession: async (id) => {
+          const agent = agentMap.get(String(id))
+          return { session: agent.session.header, inheritedEventCount: 0, events: agent.session.events }
+        },
+      }
       return services[name]
     },
     effect(factory) {
@@ -693,7 +700,8 @@ test('查询未记账的指定消息时显式返回 unknown', async () => {
 test('重启后凭 messageId 从目标日志恢复回执', async () => {
   const sessionQuery = {
     readSession: async () => ({
-      session: { id: 'session-target', seedLength: 0 },
+      session: { id: 'session-target' },
+      inheritedEventCount: 0,
       events: [{
         seq: 0,
         type: 'agent/inbox/spliced',
@@ -727,7 +735,8 @@ test('批量查询同一离线会话的回执只读取一次日志', async () =>
     readSession: async () => {
       reads += 1
       return {
-        session: { id: 'session-target', seedLength: 0 },
+        session: { id: 'session-target' },
+      inheritedEventCount: 0,
         events: [{
           seq: 0,
           type: 'agent/inbox/spliced',
@@ -758,4 +767,90 @@ test('批量查询同一离线会话的回执只读取一次日志', async () =>
   assert.equal(result.entries.length, 2)
   assert.deepEqual(result.entries.map((entry) => entry.state), ['pending', 'pending'])
   assert.equal(reads, 1)
+})
+
+test('新版真实 Session 无 events 字段时仍能查询在线投递回执', async () => {
+  const sender = liveAgent('session-sender')
+  const target = liveAgent('session-target')
+  target.session = Session.create('session-target', [], { version: 4, id: 'session-target', createdAt: 0, isSeeded: false, cwd: '/tmp' })
+  assert.equal(target.session.events, undefined)
+  let reads = 0
+  const { tools } = setup({ agents: [sender, target], services: {
+    sessionQuery: { readSession: async () => {
+      reads += 1
+      return { session: target.session.header, inheritedEventCount: 0, events: [] }
+    } },
+  } })
+  const sent = await tools.get('send_agent_message').execute(
+    { to: 'session-target', content: '新版回执' }, { agent: sender },
+  )
+  const result = await tools.get('check_delivery').execute(
+    { to: 'session-target', messageId: sent.messageId }, { agent: sender },
+  )
+  assert.equal(result.entries[0].state, 'pending')
+  assert.equal(reads, 1)
+})
+
+test('新版 fork 回执忽略继承前缀中的消息认领', async () => {
+  const sessionQuery = {
+    readSession: async () => ({
+      session: { id: 'session-target' },
+      inheritedEventCount: 2,
+      events: [
+        { type: 'agent/inbox/spliced', data: { target: 'next-turn', start: 0, inserted: [{ id: 'parent-message' }] } },
+        { type: 'agent/inbox/spliced', data: { target: 'next-turn', start: 0, removedCount: 1, inserted: [] } },
+      ],
+    }),
+  }
+  const { tools } = setup({ services: { sessionQuery } })
+  const result = await tools.get('check_delivery').execute({ to: 'session-target', messageId: 'parent-message' })
+  assert.equal(result.entries[0].state, 'unknown')
+})
+
+
+test('压力：100 对会话并发 2000 次请求严格限流且不丢失已接受消息', async () => {
+  const senders = Array.from({ length: 100 }, (_, i) => liveAgent('stress-' + i))
+  const target = liveAgent('stress-target')
+  const { tools } = setup({ agents: [...senders, target] })
+  const send = tools.get('send_agent_message')
+  const results = await Promise.allSettled(senders.flatMap((sender) =>
+    Array.from({ length: 20 }, (_, i) => send.execute(
+      { to: target.id, content: sender.id + ':' + i + ':中文🚀' }, { agent: sender },
+    )),
+  ))
+  const accepted = results.filter((r) => r.status === 'fulfilled')
+  const rejected = results.filter((r) => r.status === 'rejected')
+  assert.equal(accepted.length, 1000)
+  assert.equal(rejected.length, 1000)
+  assert.ok(rejected.every((r) => /60 秒内最多投递 10 条/.test(r.reason.message)))
+  assert.equal(target.inbox.nextTurn.length, 1000)
+  assert.equal(new Set(target.inbox.nextTurn.map((m) => m.id)).size, 1000)
+  for (const sender of senders) {
+    assert.equal(target.inbox.nextTurn.filter((m) => m.source.senderSessionId === sender.id).length, 10)
+  }
+})
+
+test('压力：100 次底层投递失败不消耗限流配额', async () => {
+  const sender = liveAgent('failure-sender')
+  const target = liveAgent('failure-target')
+  const followup = target.followup
+  target.followup = () => { throw new Error('controlled failure') }
+  const { tools } = setup({ agents: [sender, target] })
+  const send = () => tools.get('send_agent_message').execute({ to: target.id, content: 'retry' }, { agent: sender })
+  for (let i = 0; i < 100; i++) await assert.rejects(send(), /controlled failure/)
+  target.followup = followup
+  for (let i = 0; i < 10; i++) assert.equal((await send()).state, 'accepted')
+  await assert.rejects(send(), /60 秒内最多投递 10 条/)
+  assert.equal(target.inbox.nextTurn.length, 10)
+})
+
+test('压力：长 Unicode 正文完整保留且来源不可变', async () => {
+  const sender = liveAgent('unicode-sender')
+  const target = liveAgent('unicode-target')
+  const { tools } = setup({ agents: [sender, target] })
+  const content = '中文🚀 e\u0301 <script>literal</script>\n'.repeat(1000)
+  await tools.get('send_agent_message').execute({ to: target.id, content }, { agent: sender })
+  const message = target.inbox.nextTurn[0]
+  assert.equal(message.content[0].text.slice(message.content[0].text.indexOf('\n\n') + 2), content)
+  assert.ok(Object.isFrozen(message.source))
 })

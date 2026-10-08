@@ -47,7 +47,7 @@ test('会话引用和 relay 来源支持鼠标及键盘打开完整 Session ID',
   assert.match(source, /dataset\.agentMsgSessionId/)
   assert.match(source, /setAttribute\("role", "link"\)/)
   assert.match(source, /event\.key !== "Enter" && event\.key !== " "/)
-  assert.match(source, /ctx\.sessions\.open\(sessionId\)/)
+  assert.match(source, /ctx\.uiWorkspace\.openSession\(sessionId\)/)
   assert.match(source, /document\.addEventListener\("click", openSender\)/)
   assert.match(source, /document\.removeEventListener\("click", openSender\)/)
 })

@@ -1,21 +1,36 @@
 {
   "name": "dsh-cross-session-agent",
-  "version": "0.1.0",
+  "version": "0.2.0-rc.2.2",
   "packageManager": "pnpm@11.1.1",
   "description": "Unofficial bounded peer discovery, messaging, receipts, and safe context projection for DeepSeek Harness agents.",
-  "keywords": ["deepseek", "deepseek-harness", "agent", "multi-agent", "cross-session", "context"],
-  "homepage": "https://github.com/dd2673/dsh-cross-session-agent#readme",
-  "bugs": { "url": "https://github.com/dd2673/dsh-cross-session-agent/issues" },
+  "keywords": [
+    "deepseek",
+    "deepseek-harness",
+    "agent",
+    "multi-agent",
+    "cross-session",
+    "context"
+  ],
+  "homepage": "https://github.com/XiaoMa-PM/dsh-cross-session-agent#readme",
+  "bugs": {
+    "url": "https://github.com/XiaoMa-PM/dsh-cross-session-agent/issues"
+  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dd2673/dsh-cross-session-agent.git"
+    "url": "git+https://github.com/XiaoMa-PM/dsh-cross-session-agent.git"
   },
   "type": "module",
   "main": "./lib/index.js",
-  "scripts": { "test": "node --test" },
+  "scripts": {
+    "test": "node --test"
+  },
   "exports": {
-    ".": { "default": "./lib/index.js" },
-    "./client": { "default": "./lib/client.js" },
+    ".": {
+      "default": "./lib/index.js"
+    },
+    "./client": {
+      "default": "./lib/client.js"
+    },
     "./package.json": "./package.json"
   },
   "files": [
@@ -33,9 +48,13 @@
     "docs/assets/message-header-navigation.jpg",
     "lib"
   ],
-  "publishConfig": { "access": "public" },
+  "publishConfig": {
+    "access": "public"
+  },
   "dsh": {
-    "bundle": { "patch": "./cordis.patch.yml" },
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
     "client": {
       "platform": "web",
       "inject": [
@@ -43,28 +62,36 @@
         "@deepseek-ai/dsh-client-ui-slots",
         "@deepseek-ai/dsh-client-ui-conversation",
         "@deepseek-ai/dsh-client-ui-input-trigger",
-        "@deepseek-ai/dsh-client-ui-primitives"
+        "@deepseek-ai/dsh-client-ui-primitives",
+        "@deepseek-ai/dsh-client-ui-chat",
+        "@deepseek-ai/dsh-client-ui-workspace"
       ]
     }
   },
   "dshx": {
     "contributes": {
-      "tools": ["list_peer_agents", "send_agent_message", "check_delivery", "get_peer_context"],
+      "tools": [
+        "list_peer_agents",
+        "send_agent_message",
+        "check_delivery",
+        "get_peer_context"
+      ],
       "skills": []
     }
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "^4.0.1",
-    "@deepseek-ai/dsh-llm": ">=0.1.0-rc.6 <0.2.0",
-    "@deepseek-ai/dsh-tools": ">=0.1.0-rc.6 <0.2.0"
+    "@deepseek-ai/dsh-llm": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-tools": "0.2.0-rc.2"
   },
   "devDependencies": {
-    "@deepseek-ai/dsh-llm": "0.1.0-rc.6",
-    "@deepseek-ai/dsh-tools": "0.1.0-rc.6"
+    "@deepseek-ai/dsh-llm": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-tools": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-session": "0.2.0-rc.2"
   },
   "engines": {
     "node": ">=24 <25",
-    "dsh": ">=0.1.0-rc.6 <0.2.0"
+    "dsh": "0.2.0-rc.2"
   },
   "license": "MIT"
 }

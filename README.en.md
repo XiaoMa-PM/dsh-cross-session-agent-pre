@@ -31,10 +31,10 @@ approval.
 
 ## Install
 
-After the repository is published, install from GitHub:
+Install from GitHub:
 
 ```sh
-dsh plugin --profile web add github:dd2673/dsh-cross-session-agent
+dsh plugin --profile web add github:XiaoMa-PM/dsh-cross-session-agent
 ```
 
 Its bundled `cordis.patch.yml` mounts `dsh-cross-session-agent` into the active
@@ -123,3 +123,17 @@ and verifies same-workspace reads, cross-workspace denial, and the new relay
 source/tag. The publish allowlist contains only runtime code, the active
 contract, and the required security, privacy, and provenance documents; source
 tests are not a real Harness acceptance result.
+
+## Local adaptation validation
+
+This branch is being validated against DeepSeek Harness 0.2.0-rc.2. Live and cold receipts use public sessionQuery reads and inheritedEventCount to exclude fork-inherited events. Cross-workspace access is limited to messages; get_peer_context remains restricted to the same workspace. Real-model tests passed for bidirectional replies, idle wakeup, running-target followup queueing, host restart recovery, persisted receipts and denial of cross-workspace context reads. Version 0.2.0-rc.2.2 targets Harness 0.2.0-rc.2 only and is not published.
+
+Peer messages use the public conversation.chat.node renderer for sender and body. Sender navigation uses uiWorkspace.openSession; other sources retain the shipped renderer.
+
+## Upstream attribution and adaptation scope
+
+This adaptation builds on [dd2673/dsh-cross-session-agent](https://github.com/dd2673/dsh-cross-session-agent), at upstream commit `f0f7c3d6ab66c66f19472ae33220bad4613724d4`. That project derives from [GengDaPeng/dsh-agent-message](https://github.com/GengDaPeng/dsh-agent-message) v1.5.1. Original MIT notices are retained.
+
+Changes target DSH 0.2.0-rc.2 public Session query contracts, inherited fork receipt boundaries, public Chat renderers, sender navigation, and concurrency tests. Messaging works between top-level sessions within one DSH instance, including different workspaces. Independent Claude Code processes and other computers are outside this release.
+
+52 automated cases passed 20 consecutive runs; each run included 2,000 mocked concurrent requests (1,000 accepted and 1,000 rate-limited). Real four-sender fan-in delivered 12 unique messages. Request/reply evidence exists for all six directed combinations of GPT-5.6-Luna, Claude Haiku 4.5 and GLM-5.3-Flash, with fresh-session retests for some directions. Codex subscription pool rate limits and stale instructions after cancellation affected reused-session continuity; successful fresh-session retests do not establish sustained stability. Live steer/inject and long-duration soak testing remain unverified. Transport receipts do not establish task completion.

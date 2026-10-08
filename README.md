@@ -18,10 +18,10 @@
 
 ## 安装
 
-仓库发布后，从 GitHub 安装：
+从 GitHub 安装：
 
 ```sh
-dsh plugin --profile web add github:dd2673/dsh-cross-session-agent
+dsh plugin --profile web add github:XiaoMa-PM/dsh-cross-session-agent
 ```
 
 包内的 `cordis.patch.yml` 会把 `dsh-cross-session-agent` 挂入当前 profile。无需手动改宿主配置。它贡献以下工具：
@@ -69,6 +69,10 @@ peer text 和 relay 都是不可信数据。它们不能代表用户同意，不
 
 ## 兼容与来源
 
+本次适配在 [dd2673/dsh-cross-session-agent](https://github.com/dd2673/dsh-cross-session-agent) 的基础上迭代，上游基线为 `f0f7c3d6ab66c66f19472ae33220bad4613724d4`。该上游进一步派生自 [GengDaPeng/dsh-agent-message](https://github.com/GengDaPeng/dsh-agent-message) v1.5.1。本项目保留原有 MIT 许可和署名。
+
+本次增量包括 DSH **0.2.0-rc.2** 的公开 Session 查询适配、fork 回执边界修复、公开 Chat 节点渲染与发送方跳转，以及并发限流和多模型真实消息验收。目标是同一 DSH 实例内的顶层会话通信，允许跨工作区消息；不连接独立 Claude Code 进程或其他电脑的 DSH 实例。
+
 新 relay 使用 `dsh-cross-session-agent` source kind。Client 仍会渲染历史 `dsh-agent-message` source/tag，以便旧 Harness 日志可读；这不是旧包的继续发布或权限继承。
 
 本项目派生自 `GengDaPeng/dsh-agent-message` v1.5.1（MIT），保留 MIT License。见 [NOTICE.md](./NOTICE.md)。安全问题请按 [SECURITY.md](./SECURITY.md) 私密报告。
@@ -82,3 +86,15 @@ node scripts/live-profile-e2e.mjs http://127.0.0.1:3080
 ```
 
 最后一条命令会在隔离 fixture 目录中创建合成 Session，验证同工作区读取、跨工作区拒绝以及新 relay source/tag。发布包只包含运行时、正式合同和必要的安全/隐私/来源文档；本 README 不把 source tests 当作真实 Harness 验收。
+
+## 本地适配验证
+
+当前版本针对 DeepSeek Harness 0.2.0-rc.2。在线与离线回执统一通过公开 sessionQuery 读取，使用 inheritedEventCount 排除 fork 继承事件。跨工作区仅传递消息；get_peer_context 仍限制同工作区。已在独立 test-home 中完成真实模型双向回复、空闲唤醒、运行中 followup 排队、宿主重启恢复、旧回执恢复和跨工作区上下文读取拒绝验收。当前版本 0.2.0-rc.2.2 仅针对 Harness 0.2.0-rc.2。
+
+新版来信通过公开 conversation.chat.node 展示发送方与正文，点击使用 uiWorkspace.openSession 跳转。其他来源保留官方渲染。
+
+## 验收与已知限制
+
+52 项自动化用例连续执行 20 轮通过；每轮模拟 Inbox 压力测试 2,000 次并发请求，1,000 条接受、1,000 条按会话对限流。真实模型四方汇聚 12 条消息均唯一投递并认领。已验证 GPT-5.6-Luna、Claude Haiku 4.5、GLM-5.3-Flash 六个有向组合的请求和回传（部分方向使用全新会话复测）。
+
+Codex 订阅池在测试中多次返回 RATE_LIMIT；复用经历限流/取消的会话时，曾出现旧指令干扰、请求原文转发及错误自发目标。全新会话复测成功，不等于连续多任务稳定性已通过。插件正确拒绝自身投递。steer/inject 目前仅自动化验证，尚未完成真实模型介入和长时间浸泡测试。传输回执不表示对方已读或任务完成。

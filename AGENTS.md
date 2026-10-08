@@ -31,3 +31,11 @@
 - 不提交本地 profile、日志、凭据、token 或敏感调试输出。
 - 任何远端更新都必须取得用户明确授权；本地编辑或提交不构成远端授权。
 - 发布前验证 package allowlist、静态脱敏扫描、targeted tests 和真实 profile load；其中前者不能替代真实 Harness 验收。
+
+## 模块地位与逻辑
+
+- lib/index.js：Host 工具与消息权限边界；通过 agents 投递，通过 sessionQuery 查询日志回执。
+- lib/client.js：Web 会话引用、公开 Chat 节点渲染及 uiWorkspace.openSession 导航；其他消息来源沿用官方渲染器。
+- lib/peer-context.js：同工作区会话的受限上下文投影。
+- test：工具合同、客户端行为与发布文件校验。
+- scripts：真实 profile 验收；旧脚本需要核对当前 Harness 公共接口后使用。

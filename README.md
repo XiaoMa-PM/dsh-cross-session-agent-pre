@@ -18,7 +18,21 @@
 
 ## 安装
 
-已发布 npm 包，在 DSH 添加插件窗口输入 `dsh-cross-session-agent-pre` 即可。当前发布版本为 `0.2.0-rc.2.4`；国内镜像可能需要等待同步。也可通过命令安装：
+### 在 DeepSeek Harness 中直接安装（推荐）
+
+无需填写 GitHub 地址，直接使用 npm 包名：
+
+1. 打开 **插件 → 添加插件**。
+2. 在输入框填写 `dsh-cross-session-agent-pre`。
+3. 点击 **安装**。
+
+npm 官方源已提供 `0.2.0-rc.2.4`。如果使用 **中国大陆镜像源** 时提示找不到插件，请将「安装源」切换为 **npm 官方源** 后重试；镜像同步可能晚于官方源。
+
+npm 包页面：[dsh-cross-session-agent-pre](https://www.npmjs.com/package/dsh-cross-session-agent-pre)。
+
+### 命令行安装
+
+也可通过命令安装：
 
 ```sh
 dsh plugin --profile web add dsh-cross-session-agent-pre
@@ -30,7 +44,7 @@ dsh plugin --profile web add dsh-cross-session-agent-pre
 dsh plugin --profile web add github:XiaoMa-PM/dsh-cross-session-agent-pre
 ```
 
-包内的 `cordis.patch.yml` 会把 `dsh-cross-session-agent` 挂入当前 profile。无需手动改宿主配置。它贡献以下工具：
+包内的 `cordis.patch.yml` 会把 `dsh-cross-session-agent-pre` 挂入当前 profile。无需手动改宿主配置。它贡献以下工具：
 
 - `list_peer_agents`：发现可通信的 peer；
 - `send_agent_message`：显式发送一条 peer 协调消息；

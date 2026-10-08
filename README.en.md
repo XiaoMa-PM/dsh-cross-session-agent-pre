@@ -31,7 +31,21 @@ approval.
 
 ## Install
 
-The package is published on npm. Enter `dsh-cross-session-agent-pre` in the DSH Add Plugin dialog, or run:
+### Install directly in DeepSeek Harness (recommended)
+
+No GitHub URL is needed:
+
+1. Open **Plugins → Add Plugin**.
+2. Enter the npm package name `dsh-cross-session-agent-pre`.
+3. Click **Install**.
+
+The official npm registry provides version `0.2.0-rc.2.4`. If a mainland China mirror reports that the plugin cannot be found, switch the installation source to the **official npm registry** and retry. Mirrors may synchronize later.
+
+npm package: [dsh-cross-session-agent-pre](https://www.npmjs.com/package/dsh-cross-session-agent-pre).
+
+### Command-line installation
+
+Run:
 
 ```sh
 dsh plugin --profile web add dsh-cross-session-agent-pre
@@ -45,7 +59,7 @@ Install from GitHub:
 dsh plugin --profile web add github:XiaoMa-PM/dsh-cross-session-agent-pre
 ```
 
-Its bundled `cordis.patch.yml` mounts `dsh-cross-session-agent` into the active
+Its bundled `cordis.patch.yml` mounts `dsh-cross-session-agent-pre` into the active
 profile. No host configuration edits are required. It contributes:
 
 - `list_peer_agents` for peer discovery;

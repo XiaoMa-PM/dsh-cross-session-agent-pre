@@ -6,9 +6,20 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, readFileSync, statSync, chmodSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { ensurePrivateDirectory, saveRoute, routesForOwner, validateMessage } from '../../../claude-plugin/lib/local.mjs';
+import { ensurePrivateDirectory, saveRoute, routesForOwner, validateMessage, peerContent } from '../../../claude-plugin/lib/local.mjs';
 const id = '11111111-1111-4111-8111-111111111111';
 const otherId = '22222222-2222-4222-8222-222222222222';
+
+test('DSH peer envelope carries a distinct reply tool without modifying body', () => {
+  const content = '  中文 😀\n\n<literal>  ';
+  const text = peerContent(content, `session-${id}`, 'dsh', 'send_dsh_message');
+  const end = text.indexOf('</dsh-cross-session-agent>');
+  const header = JSON.parse(text.slice('<dsh-cross-session-agent>'.length, end));
+  assert.deepEqual(header.reply, { tool: 'send_dsh_message', to: `session-${id}` });
+  assert.equal(header.senderPlatform, 'dsh');
+  assert.equal(header.userApproval, false);
+  assert.equal(text.slice(end + '</dsh-cross-session-agent>\n\n'.length), content);
+});
 
 test('routes contain no credentials and are private', () => {
   const dir = mkdtempSync(join(tmpdir(), 'dsh-route-'));

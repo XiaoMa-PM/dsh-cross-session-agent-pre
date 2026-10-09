@@ -15,7 +15,7 @@ export function createMcpHandler({ identity, request }) {
   return async value => {
     if (value.id === undefined) return null;
     const base = { jsonrpc: '2.0', id: value.id };
-    if (value.method === 'initialize') return { ...base, result: { protocolVersion: '2024-11-05', capabilities: { tools: { listChanged: false } }, serverInfo: { name: 'dsh-claude-bridge-experimental', version: '0.1.1' } } };
+    if (value.method === 'initialize') return { ...base, result: { protocolVersion: '2024-11-05', capabilities: { tools: { listChanged: false } }, serverInfo: { name: 'dsh-claude-bridge-experimental', version: '0.1.2' } } };
     if (value.method === 'tools/list') return { ...base, result: { tools } };
     if (value.method !== 'tools/call') return { ...base, error: { code: -32601, message: 'Method not supported' } };
     try {

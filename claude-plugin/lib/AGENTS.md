@@ -6,3 +6,5 @@
 - 业务域清单：local.mjs。
 
 - 传输按 UTF-8 流解码，保留跨 socket chunk 的中文/emoji；不逐 Buffer 独立转字符串。
+
+- peerContent 仅序列化宿主确定的发送者、平台、回复工具及 userApproval=false，原样保留消息正文。

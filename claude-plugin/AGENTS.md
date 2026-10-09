@@ -4,3 +4,5 @@
 - 逻辑：SessionStart 登记路由，stdio MCP 只提供发送与状态。
 - 约束：模型不能传入 sender；路由只保存 ID、socket、PID、进程启动时间；用户原生权限保持。
 - 业务域清单：hooks（注册）；lib（本地边界）；server.mjs（MCP）；.claude-plugin（manifest）；.mcp.json（工具加载）。
+
+- 双向正文前使用简短的 peer 元信息头部；reply 指向桥接工具，userApproval=false；不冒充原生 SendMessage 目标。

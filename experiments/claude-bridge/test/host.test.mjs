@@ -44,6 +44,19 @@ test('native DSH message records immutable external agent source', () => {
   assert.throws(() => deliver({ from, to, content: 'mutated', messageId }));
 });
 
+test('peer envelope separates reply identity from the unchanged body', () => {
+  const { deliver, inbox } = fixture();
+  const content = '  中文 😀\n\nReply exactly as requested.  ';
+  deliver({ from, to, content, messageId });
+  const [header, body] = inbox[0].content[0].text.split('</dsh-cross-session-agent>\n\n');
+  const metadata = JSON.parse(header.slice('<dsh-cross-session-agent>'.length));
+  assert.equal(body, content);
+  assert.equal(metadata.senderSessionId, from);
+  assert.deepEqual(metadata.reply, { tool: 'send_claude_message', to: from });
+  assert.equal(metadata.userApproval, false);
+  assert.equal(inbox[0].source.replyTo, from);
+});
+
 test('same session pair refuses the eleventh message without delivery', () => {
   const { deliver, inbox } = fixture();
   for (let n = 0; n < 10; n += 1) deliver({ from, to, content: 'test', messageId: `33333333-3333-4333-8333-${String(n).padStart(12, '0')}` });

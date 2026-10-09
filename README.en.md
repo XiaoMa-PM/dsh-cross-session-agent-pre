@@ -184,3 +184,12 @@ claude plugin install dsh-cross-session-agent-pre-bridge@dsh-pre-local-experimen
 ```
 
 Uploading a ZIP to ordinary Claude Chat does not install a local Code plugin. This is a custom marketplace, not a Claude public-directory listing. One repository contains the DSH npm package and companion Claude marketplace/plugin. The official npm `latest` tag points to 0.2.0-rc.2.5. Bare-name DSH CLI/native-manager installation and one-command Claude GitHub installation were verified.
+
+
+### 0.2.0-rc.2.6 message format and upgrade
+
+Send tools retain `to` and `content`. The bridge prepends a compact header containing `senderPlatform`, `senderSessionId`, `reply.tool`, `reply.to`, and `userApproval: false`; the body is unchanged. DSH renders Claude Code sender information separately. DSH-to-Claude uses native Inbox; Claude replies use the companion's automatically loaded MCP. No separate manual MCP configuration is required. This does not register DSH as a native `SendMessage` target.
+
+Inbox accept/hold/refuse controls remain; `written`/`accepted` are transport states, not read or completion receipts. Native CLI comparison and both bridge directions passed real-model acceptance. Desktop UI parity, automatic title/environment registration and Codex distribution are not included.
+
+In DSH install `dsh-cross-session-agent-pre@0.2.0-rc.2.6`, or update through native plugin management. For Claude, run `claude plugin marketplace update dsh-pre-local-experimental`, then `claude plugin update dsh-cross-session-agent-pre-bridge@dsh-pre-local-experimental --scope user`, and reopen a test session. Companion version: `0.1.2-experimental`.

@@ -1,5 +1,5 @@
 // INPUT: Local hook metadata, OS process identity and Unix sockets.
-// OUTPUT: Private routes and bounded local transport helpers.
+// OUTPUT: Private routes, structured peer envelopes and bounded local transport.
 // POS: Shared boundary of the experimental Claude/DSH bridge.
 import { mkdirSync, lstatSync, writeFileSync, renameSync, openSync, readFileSync, closeSync, readdirSync, constants } from 'node:fs';
 import { join, basename } from 'node:path';
@@ -78,6 +78,11 @@ export function validateMessage(args) {
   const targetValid = args && (validId(args.to) || (typeof args.to === 'string' && args.to.startsWith('session-') && validId(args.to.slice(8))));
   if (!targetValid || typeof args.content !== 'string' || !args.content.trim() || Buffer.byteLength(args.content) > 16384) throw new Error('Invalid target or message (max 16 KiB)');
   return { to: args.to, content: args.content };
+}
+
+export function peerContent(content, from, platform, tool) {
+  const header = { senderPlatform: platform, senderSessionId: from, reply: { tool, to: from }, userApproval: false };
+  return `<dsh-cross-session-agent>${JSON.stringify(header)}</dsh-cross-session-agent>\n\n${content}`;
 }
 
 export function localRequest(dir, payload) {

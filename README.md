@@ -155,3 +155,26 @@ claude plugin install dsh-cross-session-agent-pre-bridge@dsh-pre-local-experimen
 不需要把 ZIP 上传到聊天窗口；本机文件夹路径才是安装来源。这里是自建市场安装，尚未进入 Claude 公共目录。一个仓库同时提供 DSH npm 包、Claude 市场入口和配套插件。
 
 npm 官方源的 `latest` 已指向 `0.2.0-rc.2.5`；DSH 裸包名安装与原生插件管理安装已核验。Claude GitHub 单命令安装已核验；此插件未被 Claude 公共目录收录。
+
+
+### 0.2.0-rc.2.6 消息格式与升级
+
+本版本让桥接更接近 SendMessage 的来源与回复模式。发送工具仍接受 `to` 和 `content`：
+
+```json
+{"to":"目标会话 ID","content":"请把测试结果回复给我。"}
+```
+
+传输时由插件添加简短来源头部，正文保持原样。例如 DSH 发往 Claude：
+
+```text
+<dsh-cross-session-agent>{"senderPlatform":"dsh","senderSessionId":"session-发送方UUID","reply":{"tool":"send_dsh_message","to":"session-发送方UUID"},"userApproval":false}</dsh-cross-session-agent>
+
+请把测试结果回复给我。
+```
+
+Claude 发往 DSH 的头部使用 `senderPlatform: "claude-code"`，回复工具为 `send_claude_message`。DSH 界面将来源标签与正文分开展示。Claude 通过原生 Inbox 接收，回复通过配套插件自动加载的 MCP；无需另外手写 MCP 配置。这不是将 DSH 注册为 Claude 原生 `SendMessage` 目标。
+
+保留 accept/hold/refuse；来源头部不代表人类授权。`written` / `accepted` 仅表示传输受理，不代表已读、回复或完成。新格式的 CLI 原生并排及两方向桥接已实测；本轮没有保证桌面 UI 完全一致。自动标题/环境字段登记与 Codex 桥接不在本版本内。
+
+DSH 安装页输入 `dsh-cross-session-agent-pre@0.2.0-rc.2.6`；已有安装使用原生插件管理的更新操作，桥接仍需开启。Claude 已安装用户执行 `claude plugin marketplace update dsh-pre-local-experimental` 后执行 `claude plugin update dsh-cross-session-agent-pre-bridge@dsh-pre-local-experimental --scope user`，再重新打开测试会话；配套版本为 `0.1.2-experimental`。

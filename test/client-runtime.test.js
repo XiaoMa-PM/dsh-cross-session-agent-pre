@@ -162,6 +162,18 @@ test('会话状态变化只刷新已识别的会话链接，不重新扫描整�
         assert.equal(entry.component({ node: otherNode }).type, stock)
       }
     })
+    await t.test('Claude 来信显示来源与原样正文，不跳转不存在的 DSH 会话', () => {
+      const entry = registrations.find(row => row.options.key === 'turn-trigger')
+      const source = { kind: 'dsh-claude-bridge', form: 'relay', senderPlatform: 'claude-code', senderSessionId: 'claude-peer' }
+      const content = '  中文 😀\nsecond line  '
+      const node = { data: { source, content: [{ type: 'text', text: '<dsh-cross-session-agent>{"senderSessionId":"claude-peer"}</dsh-cross-session-agent>\n\n' + content }] } }
+      const tree = entry.component({ node })
+      assert.equal(tree.type, 'section')
+      assert.equal(tree.props.children[0].type, 'span')
+      assert.equal(tree.props.children[0].props.onClick, undefined)
+      assert.match(tree.props.children[0].props.children[0].props.title, /Claude Code/)
+      assert.equal(tree.props.children[1].props.children[0], content)
+    })
     queries.length = 0
     sessionSubscribers[0]()
     workspaceSubscribers[0]()

@@ -1,5 +1,28 @@
 # Progress
 
+## 2026-10-09 — rc.2.6 发布准备
+
+- Anatole 授权同步 GitHub/npm/DSH 安装与社区说明。发行范围仅消息结构对齐；Claude 配套0.1.2-experimental，标题元信息和Codex不纳入。
+- 社区仓库满24小时的门槛尚未满足，沿用已授权今晚22:00提交并更新任务描述，不能宣称已经收录。
+
+## 2026-10-09 — SendMessage 并排与桥接双向验收通过
+
+- 原生 Claude→Claude、DSH→Claude→DSH、Claude→DSH→Claude 三路径真实通过，Haiku 4.5 / GLM Flash low。独立核验唯一 MCP 调用、精确来源/目标/replyTo、中文 emoji 保真。
+- 验收脚本初次误读公开 user/message 字段，并错误匹配完成文案；修正 probe 后依据实际消息验收，插件未因此改动。
+- 新结构保留 Inbox/MCP；不声称原生 SendMessage 注册 DSH，或桌面 UI 完全复刻。模型进程与专用 3101 已停止，日常3085未改；未发布。报告 outputs/claude-sendmessage-comparison-acceptance.md。
+
+## 2026-10-09 — SendMessage 风格桥接候选
+
+- Anatole 批准最小结构对齐；双向长英文前缀改为来源/回复工具/非用户授权元信息头部，正文保真。DSH 复用消息卡片，Claude UUID 不跳转本地会话。
+- TDD：新 envelope 和 Claude 卡片测试先失败，最小实现后完整 77 项通过；最终展示调整后 15 项定向复核及 git diff --check 通过。新隔离 Haiku 会话经原生 Inbox 识别回复地址并原样返回中文/emoji 标记。
+- 最终复核曾因自动审批服务额度错误未执行；用户要求重试后成功。未发布、未替换日常环境；完整原生 SendMessage 并排和新结构真实 MCP 往返尚待验收，元信息标题需求与 Codex 独立分支封装仍待完成。
+
+## 2026-10-09 — Claude 元信息与消息对齐计划
+
+- Anatole 确认在原有桥接上最小改动，登记环境字段，使用官方会话元信息接口获取自动标题及重命名后的标题；不保存或展示正文。
+- 已读取实际双端实现并对照官方跨会话文档：Claude 入站沿用 Inbox，回 DSH 为 MCP/followup；长正文前缀、非原生回复工具、written/accepted 回执是主要差异。
+- 计划 docs/plans/2026-10-09-claude-session-metadata-and-message-alignment.md；第二项仅完成静态与文档比较，尚未实施或做本轮原生并排实测。原生 SendMessage 能否注册 DSH 目标仍未证实。
+
 ## 2026-10-09 — 双端公开发布完成
 
 - GitHub源码4ba34cd与Release v0.2.0-rc.2.5公开；npm官方latest已指向0.2.0-rc.2.5，dist shasum与GitHub附件一致。保留dd2673/GengDaPeng来源与MIT归属。

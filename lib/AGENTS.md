@@ -7,3 +7,5 @@
 
 - 桥接 socket 入站使用 UTF-8 流解码；中文/emoji 可跨 chunk，来源和审批边界不变。
 - 用户批准的异常退出恢复：仅 sameUID socket 连接明确 ECONNREFUSED 且 inode/dev 未变时清理并重试一次；在线、文件、超时或未知错误均拒绝。
+
+- Claude 来信使用结构化来源/回复地址头部与原样正文，Client 显示独立来源卡片；外部 UUID 不跳转 DSH 本地会话。

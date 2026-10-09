@@ -51,3 +51,5 @@
 - 用户批准将已验证桥接纳入原插件，默认关闭，原生 settings 开启一次；当前版本实验 wire 例外延伸至此 opt-in 发行候选。不扩展历史读取、远程或多版本兼容。
 - lib/claude-bridge*.js：发行 Host 与开关生命周期；claude-plugin：自包含配套 Claude 插件；.claude-plugin：市场入口。
 - 2026-10-09 发布审阅修复：双端 UTF-8 流解码；Anatole 批准安全陈旧 socket 检查后一次重绑，不移除活动 Host。
+
+- Claude 桥接结构对齐沿用 native Inbox/MCP，不冒充 Claude 原生目标；来源、回复地址与正文分离，written/accepted 不是已读或完成。

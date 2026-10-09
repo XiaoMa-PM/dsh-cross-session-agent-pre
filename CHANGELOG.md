@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.0-rc.2.6 - 2026-10-09
+
+- Separate peer sender/reply metadata from unchanged message text in both Claude bridge directions.
+- Render Claude Code sender information separately in DSH, without navigating external UUIDs as local sessions.
+- Preserve native Inbox controls and MCP reply tools; do not represent DSH as a native SendMessage target.
+- Companion Claude plugin 0.1.2-experimental; 77 regression tests and isolated native/forward/reverse model acceptance passed.
+- Automatic session titles/environment registration and Codex bridge distribution are not included.
+
 ## 0.2.0-rc.2.5 - 2026-10-09
 
 - Bundle opt-in local Claude Code messaging with the existing DSH plugin.

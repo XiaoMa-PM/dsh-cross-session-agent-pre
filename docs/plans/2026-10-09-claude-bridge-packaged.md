@@ -43,3 +43,7 @@ Anatole 已选择并批准：原 dsh-cross-session-agent-pre 集成桥接，默�
 独立审阅复现跨 chunk UTF-8 损坏，双端使用 socket.setEncoding 流解码。Claude 配套版本0.1.1-experimental。
 
 Anatole 另明确批准异常退出恢复：只有 bind EADDRINUSE、现有 sameUID socket、connect 返回 ECONNREFUSED，且再次 lstat inode/dev 一致时删除陈旧 path并重试绑定一次。连接成功/超时/其他错误、普通文件或变化中的 path 均拒绝；不扩展多Host设计。
+
+## 公开发布（2026-10-09）
+
+GitHub Release v0.2.0-rc.2.5 / npm latest=0.2.0-rc.2.5 已公开，Claude配套0.1.1-experimental。公开GitHub一条命令安装及全新DSH裸包名CLI/native-manager安装通过；native设置claudeBridge=false且不监听。74测试与独立74复核通过。新UI点击因Mac锁定未重测，沿用此前候选UI验收，日常环境未迁移。

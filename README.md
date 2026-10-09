@@ -26,7 +26,7 @@
 2. 在输入框填写 `dsh-cross-session-agent-pre`。
 3. 点击 **安装**。
 
-npm 官方源已提供 `0.2.0-rc.2.4`。如果使用 **中国大陆镜像源** 时提示找不到插件，请将「安装源」切换为 **npm 官方源** 后重试；镜像同步可能晚于官方源。
+npm 官方源已提供 `0.2.0-rc.2.5`。如果使用 **中国大陆镜像源** 时提示找不到插件，请将「安装源」切换为 **npm 官方源** 后重试；镜像同步可能晚于官方源。
 
 npm 包页面：[dsh-cross-session-agent-pre](https://www.npmjs.com/package/dsh-cross-session-agent-pre)。
 
@@ -109,7 +109,7 @@ node scripts/live-profile-e2e.mjs http://127.0.0.1:3080
 
 ## 本地适配验证
 
-当前版本针对 DeepSeek Harness 0.2.0-rc.2。在线与离线回执统一通过公开 sessionQuery 读取，使用 inheritedEventCount 排除 fork 继承事件。跨工作区仅传递消息；get_peer_context 仍限制同工作区。已在独立 test-home 中完成真实模型双向回复、空闲唤醒、运行中 followup 排队、宿主重启恢复、旧回执恢复和跨工作区上下文读取拒绝验收。当前版本 0.2.0-rc.2.4 仅针对 Harness 0.2.0-rc.2。
+当前版本针对 DeepSeek Harness 0.2.0-rc.2。在线与离线回执统一通过公开 sessionQuery 读取，使用 inheritedEventCount 排除 fork 继承事件。跨工作区仅传递消息；get_peer_context 仍限制同工作区。已在独立 test-home 中完成真实模型双向回复、空闲唤醒、运行中 followup 排队、宿主重启恢复、旧回执恢复和跨工作区上下文读取拒绝验收。当前版本 0.2.0-rc.2.5 仅针对 Harness 0.2.0-rc.2。
 
 新版来信通过公开 conversation.chat.node 展示发送方与正文，点击使用 uiWorkspace.openSession 跳转。其他来源保留官方渲染。
 
@@ -154,4 +154,4 @@ claude plugin install dsh-cross-session-agent-pre-bridge@dsh-pre-local-experimen
 
 不需要把 ZIP 上传到聊天窗口；本机文件夹路径才是安装来源。这里是自建市场安装，尚未进入 Claude 公共目录。一个仓库同时提供 DSH npm 包、Claude 市场入口和配套插件。
 
-0.2.0-rc.2.5 的 npm 发布状态以 [npm 包页面](https://www.npmjs.com/package/dsh-cross-session-agent-pre) 为准；GitHub 已提供配套市场入口。
+npm 官方源的 `latest` 已指向 `0.2.0-rc.2.5`；DSH 裸包名安装与原生插件管理安装已核验。Claude GitHub 单命令安装已核验；此插件未被 Claude 公共目录收录。

@@ -39,7 +39,7 @@ No GitHub URL is needed:
 2. Enter the npm package name `dsh-cross-session-agent-pre`.
 3. Click **Install**.
 
-The official npm registry provides version `0.2.0-rc.2.4`. If a mainland China mirror reports that the plugin cannot be found, switch the installation source to the **official npm registry** and retry. Mirrors may synchronize later.
+The official npm registry provides version `0.2.0-rc.2.5`. If a mainland China mirror reports that the plugin cannot be found, switch the installation source to the **official npm registry** and retry. Mirrors may synchronize later.
 
 npm package: [dsh-cross-session-agent-pre](https://www.npmjs.com/package/dsh-cross-session-agent-pre).
 
@@ -51,7 +51,7 @@ Run:
 dsh plugin --profile web add dsh-cross-session-agent-pre
 ```
 
-Current published version: `0.2.0-rc.2.4`. Registry mirrors may synchronize later.
+Current published version: `0.2.0-rc.2.5`. Registry mirrors may synchronize later.
 
 Install from GitHub:
 
@@ -183,4 +183,4 @@ claude plugin marketplace add /absolute/path/to/dsh-cross-session-agent-pre --sc
 claude plugin install dsh-cross-session-agent-pre-bridge@dsh-pre-local-experimental --scope user
 ```
 
-Uploading a ZIP to ordinary Claude Chat does not install a local Code plugin. This is a custom marketplace, not a Claude public-directory listing. One repository contains the DSH npm package and companion Claude marketplace/plugin. Check npm for publication availability of 0.2.0-rc.2.5.
+Uploading a ZIP to ordinary Claude Chat does not install a local Code plugin. This is a custom marketplace, not a Claude public-directory listing. One repository contains the DSH npm package and companion Claude marketplace/plugin. The official npm `latest` tag points to 0.2.0-rc.2.5. Bare-name DSH CLI/native-manager installation and one-command Claude GitHub installation were verified.

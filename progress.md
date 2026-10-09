@@ -1,5 +1,13 @@
 # Progress
 
+## 2026-10-09 — 双端公开发布完成
+
+- GitHub源码4ba34cd与Release v0.2.0-rc.2.5公开；npm官方latest已指向0.2.0-rc.2.5，dist shasum与GitHub附件一致。保留dd2673/GengDaPeng来源与MIT归属。
+- 从公开GitHub一条Claude安装命令成功，配套0.1.1-experimental且enabled；全新published-home官方CLI裸包名安装成功。另一空白profile原生pluginManager inspect/installBundle同样裸名成功，application=applied、bundle启用、claudeBridge=false且没有socket监听。
+- 74项测试与主代理独立74项复核通过。发布审阅新增UTF-8分块保真和用户批准的安全陈旧socket恢复；不删除在线Host或普通文件。
+- npm首次登录失效，用户恢复；发布Web二次认证曾超时，重新即时授权后npm接受并processing，等公开dist可读才宣布下载可用。
+- 本轮Mac锁定，未重复UI点击，按主代理要求用公开native RPC验收；此前候选UI启停/重启证据独立保留。不迁移日常环境或重启工作会话；本轮专用3097测试Host已停止。
+
 ## 2026-10-09 — 同仓库双端发布与快捷安装准备
 
 - Anatole 批准将 DSH 裸包名安装与 Claude 自建 GitHub 市场安装放在同仓库，并授权发布。DSH 桥接默认关闭，用户在插件详情开启一次。

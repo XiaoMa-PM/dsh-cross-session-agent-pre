@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.0-rc.2.5 (candidate)
+## 0.2.0-rc.2.5 - 2026-10-09
 
 - Bundle opt-in local Claude Code messaging with the existing DSH plugin.
 - Native persistent settings switch; companion Claude plugin and marketplace included.

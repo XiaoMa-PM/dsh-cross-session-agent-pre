@@ -1,5 +1,12 @@
 # Progress
 
+## 2026-10-09 — rc.2.6 公开发布与安装验证完成
+
+- GitHub源码487f4f4、Release v0.2.0-rc.2.6与npm latest=0.2.0-rc.2.6已公开。SHA1 ae5a566382045dde19d8b24737c0dc6985dd4002，GitHub SHA256 d8c4b441dd01ea92e3a655328060efa550f4db814cc5943cecd27158645bbe3a；同一安装包。
+- 空白Claude配置从GitHub安装0.1.2-experimental，enabled=true/MCP自动加载。DSH空白profile裸包名与指定版本安装均确认rc.2.6及peerContent新实现。没有升级日常3085或用户Claude配置。
+- npm首次tarball路径缺./被当Git shorthand，未发布；使用本地路径、TTY Web二次认证后成功。registry processing期间首次DSH裸名安装解析旧版，传播后另一空白profile裸名安装rc.2.6；不把首次旧版当成功。
+- 社区需仓库满24小时，已更新用户授权的今晚22:00提交自动化及YAML说明，尚未提交/收录；标题登记与Codex分支仍待后续。
+
 ## 2026-10-09 — rc.2.6 发布准备
 
 - Anatole 授权同步 GitHub/npm/DSH 安装与社区说明。发行范围仅消息结构对齐；Claude 配套0.1.2-experimental，标题元信息和Codex不纳入。

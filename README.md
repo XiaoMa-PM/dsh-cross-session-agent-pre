@@ -26,7 +26,7 @@
 2. 在输入框填写 `dsh-cross-session-agent-pre`。
 3. 点击 **安装**。
 
-npm 官方源已提供 `0.2.0-rc.2.5`。如果使用 **中国大陆镜像源** 时提示找不到插件，请将「安装源」切换为 **npm 官方源** 后重试；镜像同步可能晚于官方源。
+npm 官方源已提供 `0.2.0-rc.2.6`。如果使用 **中国大陆镜像源** 时提示找不到插件，请将「安装源」切换为 **npm 官方源** 后重试；镜像同步可能晚于官方源。
 
 npm 包页面：[dsh-cross-session-agent-pre](https://www.npmjs.com/package/dsh-cross-session-agent-pre)。
 
@@ -109,7 +109,7 @@ node scripts/live-profile-e2e.mjs http://127.0.0.1:3080
 
 ## 本地适配验证
 
-当前版本针对 DeepSeek Harness 0.2.0-rc.2。在线与离线回执统一通过公开 sessionQuery 读取，使用 inheritedEventCount 排除 fork 继承事件。跨工作区仅传递消息；get_peer_context 仍限制同工作区。已在独立 test-home 中完成真实模型双向回复、空闲唤醒、运行中 followup 排队、宿主重启恢复、旧回执恢复和跨工作区上下文读取拒绝验收。当前版本 0.2.0-rc.2.5 仅针对 Harness 0.2.0-rc.2。
+当前版本针对 DeepSeek Harness 0.2.0-rc.2。在线与离线回执统一通过公开 sessionQuery 读取，使用 inheritedEventCount 排除 fork 继承事件。跨工作区仅传递消息；get_peer_context 仍限制同工作区。已在独立 test-home 中完成真实模型双向回复、空闲唤醒、运行中 followup 排队、宿主重启恢复、旧回执恢复和跨工作区上下文读取拒绝验收。当前版本 0.2.0-rc.2.6 仅针对 Harness 0.2.0-rc.2。
 
 新版来信通过公开 conversation.chat.node 展示发送方与正文，点击使用 uiWorkspace.openSession 跳转。其他来源保留官方渲染。
 
@@ -119,7 +119,7 @@ node scripts/live-profile-e2e.mjs http://127.0.0.1:3080
 
 Codex 订阅池在测试中多次返回 RATE_LIMIT；复用经历限流/取消的会话时，曾出现旧指令干扰、请求原文转发及错误自发目标。全新会话复测成功，不等于连续多任务稳定性已通过。插件正确拒绝自身投递。steer/inject 目前仅自动化验证，尚未完成真实模型介入和长时间浸泡测试。传输回执不表示对方已读或任务完成。
 
-## Claude Code 本机通信（实验，0.2.0-rc.2.5）
+## Claude Code 本机通信（实验，0.2.0-rc.2.6）
 
 原插件同时包含 DSH 跨会话与 Claude 桥接；安装后默认关闭。支持当前验证的 DSH 0.2.0-rc.2、Claude CLI 2.1.294 / 本机 Claude App Code；Node 24、Cordis 4.0.4+。
 
@@ -154,7 +154,7 @@ claude plugin install dsh-cross-session-agent-pre-bridge@dsh-pre-local-experimen
 
 不需要把 ZIP 上传到聊天窗口；本机文件夹路径才是安装来源。这里是自建市场安装，尚未进入 Claude 公共目录。一个仓库同时提供 DSH npm 包、Claude 市场入口和配套插件。
 
-npm 官方源的 `latest` 已指向 `0.2.0-rc.2.5`；DSH 裸包名安装与原生插件管理安装已核验。Claude GitHub 单命令安装已核验；此插件未被 Claude 公共目录收录。
+npm 官方源的 `latest` 已指向 `0.2.0-rc.2.6`；本轮 DSH 裸包名与指定版本安装均已核验，原生插件管理安装在上一版本已核验。Claude GitHub 单命令安装已核验；此插件未被 Claude 公共目录收录。
 
 
 ### 0.2.0-rc.2.6 消息格式与升级

@@ -39,7 +39,7 @@ No GitHub URL is needed:
 2. Enter the npm package name `dsh-cross-session-agent-pre`.
 3. Click **Install**.
 
-The official npm registry provides version `0.2.0-rc.2.5`. If a mainland China mirror reports that the plugin cannot be found, switch the installation source to the **official npm registry** and retry. Mirrors may synchronize later.
+The official npm registry provides version `0.2.0-rc.2.6`. If a mainland China mirror reports that the plugin cannot be found, switch the installation source to the **official npm registry** and retry. Mirrors may synchronize later.
 
 npm package: [dsh-cross-session-agent-pre](https://www.npmjs.com/package/dsh-cross-session-agent-pre).
 
@@ -51,7 +51,7 @@ Run:
 dsh plugin --profile web add dsh-cross-session-agent-pre
 ```
 
-Current published version: `0.2.0-rc.2.5`. Registry mirrors may synchronize later.
+Current published version: `0.2.0-rc.2.6`. Registry mirrors may synchronize later.
 
 Install from GitHub:
 
@@ -160,7 +160,7 @@ Changes target DSH 0.2.0-rc.2 public Session query contracts, inherited fork rec
 
 52 automated cases passed 20 consecutive runs; each run included 2,000 mocked concurrent requests (1,000 accepted and 1,000 rate-limited). Real four-sender fan-in delivered 12 unique messages. Request/reply evidence exists for all six directed combinations of GPT-5.6-Luna, Claude Haiku 4.5 and GLM-5.3-Flash, with fresh-session retests for some directions. Codex subscription pool rate limits and stale instructions after cancellation affected reused-session continuity; successful fresh-session retests do not establish sustained stability. Live steer/inject and long-duration soak testing remain unverified. Transport receipts do not establish task completion.
 
-## Local Claude Code messaging (experimental 0.2.0-rc.2.5)
+## Local Claude Code messaging (experimental 0.2.0-rc.2.6)
 
 The same DSH package includes peer messaging and an opt-in Claude bridge. It defaults off. Install it, open Plugins → Installed → dsh-cross-session-agent-pre, and enable the Claude Code messaging switch once. DSH persists the choice and owns the bridge lifecycle; no manual YAML, source paths, or additional bridge process are required.
 
@@ -183,7 +183,7 @@ claude plugin marketplace add /absolute/path/to/dsh-cross-session-agent-pre --sc
 claude plugin install dsh-cross-session-agent-pre-bridge@dsh-pre-local-experimental --scope user
 ```
 
-Uploading a ZIP to ordinary Claude Chat does not install a local Code plugin. This is a custom marketplace, not a Claude public-directory listing. One repository contains the DSH npm package and companion Claude marketplace/plugin. The official npm `latest` tag points to 0.2.0-rc.2.5. Bare-name DSH CLI/native-manager installation and one-command Claude GitHub installation were verified.
+Uploading a ZIP to ordinary Claude Chat does not install a local Code plugin. This is a custom marketplace, not a Claude public-directory listing. One repository contains the DSH npm package and companion Claude marketplace/plugin. The official npm `latest` tag points to 0.2.0-rc.2.6. Bare-name and pinned-version DSH CLI installation and one-command Claude GitHub installation were verified for this release. Native-manager installation was verified on the preceding release.
 
 
 ### 0.2.0-rc.2.6 message format and upgrade

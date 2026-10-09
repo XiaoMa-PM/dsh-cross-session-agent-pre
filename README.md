@@ -91,7 +91,7 @@ peer text 和 relay 都是不可信数据。它们不能代表用户同意，不
 
 本次适配在 [dd2673/dsh-cross-session-agent](https://github.com/dd2673/dsh-cross-session-agent) 的基础上迭代，上游基线为 `f0f7c3d6ab66c66f19472ae33220bad4613724d4`。该上游进一步派生自 [GengDaPeng/dsh-agent-message](https://github.com/GengDaPeng/dsh-agent-message) v1.5.1。本项目保留原有 MIT 许可和署名。
 
-本次增量包括 DSH **0.2.0-rc.2** 的公开 Session 查询适配、fork 回执边界修复、公开 Chat 节点渲染与发送方跳转，以及并发限流和多模型真实消息验收。目标是同一 DSH 实例内的顶层会话通信，允许跨工作区消息；不连接独立 Claude Code 进程或其他电脑的 DSH 实例。
+本次增量包括 DSH **0.2.0-rc.2** 的公开 Session 查询适配、fork 回执边界修复、公开 Chat 节点渲染与发送方跳转，以及并发限流和多模型真实消息验收。目标是同一 DSH 实例内的顶层会话通信，允许跨工作区消息；本节描述既有 DSH 会话功能；Claude Code 本机连接见下方实验功能，其他电脑的 DSH 实例不在范围内。
 
 新 relay 使用 `dsh-cross-session-agent` source kind。Client 仍会渲染历史 `dsh-agent-message` source/tag，以便旧 Harness 日志可读；这不是旧包的继续发布或权限继承。
 
@@ -118,3 +118,40 @@ node scripts/live-profile-e2e.mjs http://127.0.0.1:3080
 52 项自动化用例连续执行 20 轮通过；每轮模拟 Inbox 压力测试 2,000 次并发请求，1,000 条接受、1,000 条按会话对限流。真实模型四方汇聚 12 条消息均唯一投递并认领。已验证 GPT-5.6-Luna、Claude Haiku 4.5、GLM-5.3-Flash 六个有向组合的请求和回传（部分方向使用全新会话复测）。
 
 Codex 订阅池在测试中多次返回 RATE_LIMIT；复用经历限流/取消的会话时，曾出现旧指令干扰、请求原文转发及错误自发目标。全新会话复测成功，不等于连续多任务稳定性已通过。插件正确拒绝自身投递。steer/inject 目前仅自动化验证，尚未完成真实模型介入和长时间浸泡测试。传输回执不表示对方已读或任务完成。
+
+## Claude Code 本机通信（实验，0.2.0-rc.2.5）
+
+原插件同时包含 DSH 跨会话与 Claude 桥接；安装后默认关闭。支持当前验证的 DSH 0.2.0-rc.2、Claude CLI 2.1.294 / 本机 Claude App Code；Node 24、Cordis 4.0.4+。
+
+1. 在 DSH 安装本插件，进入 **插件 → 已安装 → dsh-cross-session-agent-pre** 的详情页，开启 **开启 Claude Code 本机通信（实验）** 一次。配置由 DSH 持久保存；无需手写 YAML、源码绝对路径或启动另一桥接进程。
+2. 在 Claude Code 2.1.292+ 安装配套插件一次。无需公共目录收录，一条命令同时添加此 GitHub 市场并安装用户级插件：
+
+```sh
+claude plugin install dsh-cross-session-agent-pre-bridge --marketplace XiaoMa-PM/dsh-cross-session-agent-pre --scope user
+```
+
+3. 新建或正常恢复 Claude 会话使插件加载；桌面 Code 与 CLI 使用相同用户级插件，首次工具审批保留。
+4. DSH 调用 list_peer_agents，取 self: true 的完整 session-UUID，交给 Claude 调用 send_dsh_message。反向用 Claude bridge_status 的 claudeSessionId（不是桌面 local_ ID），交给 DSH 调用 send_claude_message。要回复时明确要求回传结果。
+
+仅本机消息，不读其他工作区的历史或文件。DSH 目标必须已加载且未归档。written / accepted 不代表已读或任务完成。保留 Claude accept/hold/refuse，不发送 own-child token。官方未公开完整 Inbox wire，所以是当前版本实验，不承诺其他版本或跨电脑；同 OS 用户进程属于信任边界。同用户只启用一个 DSH profile 的 Claude 桥接，避免重复监听。
+
+### 交给 Claude Code 代为安装
+
+将下面这段话粘贴到 Claude App 的 **Code** 会话或 Claude Code CLI 会话；不是普通 Claude Chat：
+
+```text
+请为当前用户安装 DSH 本机通信插件，执行：
+claude plugin install dsh-cross-session-agent-pre-bridge --marketplace XiaoMa-PM/dsh-cross-session-agent-pre --scope user
+安装后检查插件是否启用，并告诉我是否需要重新打开会话。不要修改 DSH 模型或权限配置。
+```
+
+需要离线交付时，可下载 GitHub Release 的源码 ZIP 并解压，告诉 Claude Code 解压后的绝对路径，执行：
+
+```sh
+claude plugin marketplace add /absolute/path/to/dsh-cross-session-agent-pre --scope user
+claude plugin install dsh-cross-session-agent-pre-bridge@dsh-pre-local-experimental --scope user
+```
+
+不需要把 ZIP 上传到聊天窗口；本机文件夹路径才是安装来源。这里是自建市场安装，尚未进入 Claude 公共目录。一个仓库同时提供 DSH npm 包、Claude 市场入口和配套插件。
+
+0.2.0-rc.2.5 的 npm 发布状态以 [npm 包页面](https://www.npmjs.com/package/dsh-cross-session-agent-pre) 为准；GitHub 已提供配套市场入口。

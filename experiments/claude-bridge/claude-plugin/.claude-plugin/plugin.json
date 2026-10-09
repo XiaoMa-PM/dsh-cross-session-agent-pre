@@ -1,0 +1,6 @@
+{
+  "name": "dsh-cross-session-agent-pre-bridge",
+  "version": "0.1.0-experimental",
+  "description": "Experimental local Claude Code and DSH session messaging for the currently validated Inbox protocol.",
+  "author": { "name": "Anatole" }
+}

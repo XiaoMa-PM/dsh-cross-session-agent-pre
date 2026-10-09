@@ -115,3 +115,9 @@ Both live and cold delivery receipts use public sessionQuery.readSession. The sn
 ## Harness 0.2.0-rc.2 Web rendering
 
 Peer relay messages render through the public conversation.chat.node keyed slot for context and turn-trigger. The plugin owns priority -1; other source kinds delegate to the shipped priority-0 renderer. Sender links navigate through uiWorkspace.openSession using the durable source senderSessionId. The protocol header is removed only when its sender matches the durable source. Title updates follow the public session list observable. No permission or Host-message semantics change.
+
+## Opt-in local Claude bridge (release candidate)
+
+The packaged Claude bridge is disabled by default. A persistent boolean on the native installed-plugin detail page mounts or disposes the local Host. The companion Claude plugin registers minimal session UUID/socket/PID/process-start metadata in a private per-user local directory; no transcripts or credentials are stored there. Messages retain sender and target identities and are peer input, not user authorization. Claude native peer accept/hold/refuse remains in control. Only the tested local Inbox wire is supported experimentally; one enabled Host per OS user, with loaded, unarchived DSH targets. This is not cross-machine transport.
+
+Socket messages are decoded as UTF-8 streams. On EADDRINUSE, restart recovery removes only a same-UID socket that returns ECONNREFUSED and has unchanged inode/device before one rebind; live or uncertain paths are preserved.

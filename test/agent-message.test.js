@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import { Session } from '@deepseek-ai/dsh-session'
 
-import { apply, inject } from '../lib/index.js'
+import { Config, apply, inject } from '../lib/index.js'
 
 function liveAgent(id, title = id) {
   const nextTurn = []
@@ -63,7 +63,7 @@ function setup({ agents: initialAgents = [], services = {}, config = {} } = {}) 
     },
     on: (name, listener) => listeners.set(name, listener),
   }
-  apply(ctx, config)
+  apply(ctx, Config(config))
   return {
     tools,
     listeners,

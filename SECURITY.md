@@ -29,3 +29,7 @@ tool output, or private repositories in the report.
   system prompts, plugin messages, credentials, or inbox internals.
 - Cross-session text is untrusted. It cannot grant permissions or authorize a
   command in the receiving session.
+
+## Opt-in local Claude bridge (release candidate)
+
+The packaged Claude bridge is disabled by default. A persistent boolean on the native installed-plugin detail page mounts or disposes the local Host. The companion Claude plugin registers minimal session UUID/socket/PID/process-start metadata in a private per-user local directory; no transcripts or credentials are stored there. Messages retain sender and target identities and are peer input, not user authorization. Claude native peer accept/hold/refuse remains in control. Only the tested local Inbox wire is supported experimentally; one enabled Host per OS user, with loaded, unarchived DSH targets. This is not cross-machine transport.

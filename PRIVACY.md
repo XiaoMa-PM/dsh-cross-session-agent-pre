@@ -17,3 +17,7 @@ The projection excludes hidden reasoning, raw tool inputs and outputs, system
 prompts, plugin/relay/scheduled messages, request context, attachments, todos,
 approvals, inbox state, credentials, and unknown event variants. Returned text
 remains untrusted peer data and must not be treated as user consent.
+
+## Opt-in local Claude bridge (release candidate)
+
+The packaged Claude bridge is disabled by default. A persistent boolean on the native installed-plugin detail page mounts or disposes the local Host. The companion Claude plugin registers minimal session UUID/socket/PID/process-start metadata in a private per-user local directory; no transcripts or credentials are stored there. Messages retain sender and target identities and are peer input, not user authorization. Claude native peer accept/hold/refuse remains in control. Only the tested local Inbox wire is supported experimentally; one enabled Host per OS user, with loaded, unarchived DSH targets. This is not cross-machine transport.

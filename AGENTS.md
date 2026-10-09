@@ -39,3 +39,15 @@
 - lib/peer-context.js：同工作区会话的受限上下文投影。
 - test：工具合同、客户端行为与发布文件校验。
 - scripts：真实 profile 验收；旧脚本需要核对当前 Harness 公共接口后使用。
+- scripts/claude-probe：本机 Claude Inbox 可行性探针，仅测试新会话，不进入发布运行时。
+
+## 已批准实验例外
+
+- Anatole 于 2026-10-08 批准 experiments/claude-bridge 使用当前验证版本的原生 Claude Inbox 实验 wire，以及同用户 Unix socket 与最少路由登记。此例外仅限本机实验，不改变现有发布 runtime 或授权消息边界。
+- experiments：opt-in 实验；claude-bridge 覆盖 Host、Claude 插件、测试与本地市场，参见其 AGENTS.md。
+
+## 2026-10-09 批准的桥接封装
+
+- 用户批准将已验证桥接纳入原插件，默认关闭，原生 settings 开启一次；当前版本实验 wire 例外延伸至此 opt-in 发行候选。不扩展历史读取、远程或多版本兼容。
+- lib/claude-bridge*.js：发行 Host 与开关生命周期；claude-plugin：自包含配套 Claude 插件；.claude-plugin：市场入口。
+- 2026-10-09 发布审阅修复：双端 UTF-8 流解码；Anatole 批准安全陈旧 socket 检查后一次重绑，不移除活动 Host。

@@ -1,0 +1,13 @@
+{
+  "name": "dsh-pre-local-experimental",
+  "owner": {
+    "name": "Anatole"
+  },
+  "plugins": [
+    {
+      "name": "dsh-cross-session-agent-pre-bridge",
+      "source": "./claude-plugin",
+      "description": "Experimental local DSH and Claude Code bidirectional messaging."
+    }
+  ]
+}

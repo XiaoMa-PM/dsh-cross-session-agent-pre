@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.0-rc.2.5 (candidate)
+
+- Bundle opt-in local Claude Code messaging with the existing DSH plugin.
+- Native persistent settings switch; companion Claude plugin and marketplace included.
+- Preserve existing peer boundaries and tested-version Inbox controls.
+- Safely recover a crashed Host socket only after a refused connection and unchanged owned socket identity.
+- Preserve fragmented UTF-8 on both socket directions; companion Claude plugin 0.1.1-experimental.
+
 ## 0.2.0-rc.2.4 - 2026-10-08
 
 - Increment version for npm publication after 0.2.0-rc.2.3 was reserved by staged publishing. No runtime changes.

@@ -61,6 +61,7 @@ test('会话状态变化只刷新已识别的会话链接，不重新扫描整�
   const sessionSubscribers = []
   const workspaceSubscribers = []
   const cleanups = []
+  const configWrites = []
 
   try {
     globalThis.document = document
@@ -98,6 +99,14 @@ test('会话状态变化只刷新已识别的会话链接，不重新扫描整�
       },
     }
     const ctx = {
+      configForms: {
+        get: () => ({
+          getSnapshot: () => ({ status: 'ready', writable: true, value: { claudeBridge: false } }),
+          subscribe: () => () => {},
+          set: async (key, value) => { configWrites.push({ key, value }); return true },
+        }),
+        whileServed: (_namespaces, register) => register(),
+      },
       uiWorkspace: { openSession(id) { opened.push(id) } },
       sessions: {
         list: {
@@ -124,6 +133,17 @@ test('会话状态变化只刷新已识别的会话链接，不重新扫描整�
     }
 
     client.apply(ctx)
+    await t.test('插件详情页开关通过公共 configForms 写入，无文件编辑', async () => {
+      const entry = registrations.find(row => row.options.name === 'plugins.bundle.config')
+      assert.ok(entry, '缺少插件配置页')
+      assert.equal(entry.options.key, 'dsh-cross-session-agent-pre')
+      const tree = entry.component({})
+      const input = tree.props.children[1].props.children[0]
+      assert.equal(input.props.role, 'switch')
+      assert.equal(input.props.checked, false)
+      await input.props.onChange({ currentTarget: { checked: true } })
+      assert.deepEqual(configWrites, [{ key: 'claudeBridge', value: true }])
+    })
     await t.test('新版插件来信使用公开节点渲染并保留发送方跳转', () => {
       for (const key of ['turn-trigger', 'context']) {
         const entry = registrations.find((entry) => entry.options.key === key)

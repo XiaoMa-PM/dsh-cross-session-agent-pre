@@ -156,6 +156,31 @@ Peer messages use the public conversation.chat.node renderer for sender and body
 
 This adaptation builds on [dd2673/dsh-cross-session-agent](https://github.com/dd2673/dsh-cross-session-agent), at upstream commit `f0f7c3d6ab66c66f19472ae33220bad4613724d4`. That project derives from [GengDaPeng/dsh-agent-message](https://github.com/GengDaPeng/dsh-agent-message) v1.5.1. Original MIT notices are retained.
 
-Changes target DSH 0.2.0-rc.2 public Session query contracts, inherited fork receipt boundaries, public Chat renderers, sender navigation, and concurrency tests. Messaging works between top-level sessions within one DSH instance, including different workspaces. Independent Claude Code processes and other computers are outside this release.
+Changes target DSH 0.2.0-rc.2 public Session query contracts, inherited fork receipt boundaries, public Chat renderers, sender navigation, and concurrency tests. Messaging works between top-level sessions within one DSH instance, including different workspaces. Optional local Claude Code messaging is described below; other computers are outside this release.
 
 52 automated cases passed 20 consecutive runs; each run included 2,000 mocked concurrent requests (1,000 accepted and 1,000 rate-limited). Real four-sender fan-in delivered 12 unique messages. Request/reply evidence exists for all six directed combinations of GPT-5.6-Luna, Claude Haiku 4.5 and GLM-5.3-Flash, with fresh-session retests for some directions. Codex subscription pool rate limits and stale instructions after cancellation affected reused-session continuity; successful fresh-session retests do not establish sustained stability. Live steer/inject and long-duration soak testing remain unverified. Transport receipts do not establish task completion.
+
+## Local Claude Code messaging (experimental 0.2.0-rc.2.5)
+
+The same DSH package includes peer messaging and an opt-in Claude bridge. It defaults off. Install it, open Plugins → Installed → dsh-cross-session-agent-pre, and enable the Claude Code messaging switch once. DSH persists the choice and owns the bridge lifecycle; no manual YAML, source paths, or additional bridge process are required.
+
+On Claude Code 2.1.292+, install the companion plugin once; this command adds the GitHub marketplace and installs at user scope:
+
+```sh
+claude plugin install dsh-cross-session-agent-pre-bridge --marketplace XiaoMa-PM/dsh-cross-session-agent-pre --scope user
+```
+
+New/resumed Claude CLI and App Code sessions register automatically. Native tool approval remains. Use DSH list_peer_agents with self: true to copy its session-UUID; Claude sends with send_dsh_message. Use Claude bridge_status to get its Claude UUID (not desktop local_ ID); DSH sends with send_claude_message. Request a returned result explicitly.
+
+Validated runtime: DSH 0.2.0-rc.2, Node 24, Cordis 4.0.4+, CLI 2.1.294 and the local Claude App Code. The native Inbox wire is not fully documented, so this is a tested-version experiment. Local messages only; no transcript/file access, remote hosts, own-child token, or approval bypass. Only loaded, ordinary, unarchived DSH targets are accepted. Enable one bridge Host per OS user. written/accepted are transport states, not proof of reading/completion. Same-UID processes are inside the trust boundary.
+
+Paste the command into a Claude App **Code** or Claude Code CLI session and ask it to install for the current user, check that the plugin is enabled, and explain whether a new session is needed. Native approvals still apply.
+
+For a downloaded GitHub source ZIP, extract it locally and give Claude Code the absolute folder path:
+
+```sh
+claude plugin marketplace add /absolute/path/to/dsh-cross-session-agent-pre --scope user
+claude plugin install dsh-cross-session-agent-pre-bridge@dsh-pre-local-experimental --scope user
+```
+
+Uploading a ZIP to ordinary Claude Chat does not install a local Code plugin. This is a custom marketplace, not a Claude public-directory listing. One repository contains the DSH npm package and companion Claude marketplace/plugin. Check npm for publication availability of 0.2.0-rc.2.5.

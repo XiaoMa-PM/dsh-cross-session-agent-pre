@@ -2,7 +2,7 @@
 
 > Status: active product and implementation contract
 >
-> Version: 0.2.0-rc.2.2 (local validation), 2026-10-08
+> Version: 0.2.0-rc.2.7, 2026-10-10
 >
 > **Unofficial.** Not affiliated with, endorsed by, or supported by DeepSeek or
 > DeepSeek Harness.
@@ -121,3 +121,7 @@ Peer relay messages render through the public conversation.chat.node keyed slot 
 The packaged Claude bridge is disabled by default. A persistent boolean on the native installed-plugin detail page mounts or disposes the local Host. The companion Claude plugin registers minimal session UUID/socket/PID/process-start metadata in a private per-user local directory; no transcripts or credentials are stored there. Messages retain sender and target identities and are peer input, not user authorization. Claude native peer accept/hold/refuse remains in control. Only the tested local Inbox wire is supported experimentally; one enabled Host per OS user, with loaded, unarchived DSH targets. This is not cross-machine transport.
 
 Socket messages are decoded as UTF-8 streams. On EADDRINUSE, restart recovery removes only a same-UID socket that returns ECONNREFUSED and has unchanged inode/device before one rebind; live or uncertain paths are preserved.
+
+## 多实例 Claude 桥接
+
+同用户 profile 以公开 profileContext.dir 的 realpath 和 name 的 JSON 二元组生成 SHA-256 instanceId；每个实例分别绑定私有 socket，并登记 PID/启动时间。Claude 聚合当前有效登记，发送强制 instanceId+session ID，Host 在分派前验证实例匹配。未知、离线、超时目标均不改投；旧全局 bridge.sock 不参与路由。开关经公开 configForms 持久化，不能把保存成功视为运行成功。完整设计和验收条件见 docs/plans/2026-10-09-multi-instance-claude-bridge-design.md。

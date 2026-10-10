@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.0-rc.2.7 - 2026-10-10
+
+- Allow Web and desktop profiles to enable independent local Claude bridges.
+- Require instanceId and session ID for precise Claude replies; offline instances are never replaced by another destination.
+- Remove an unavailable client timer dependency that prevented plugin settings from mounting.
+- Companion Claude plugin 0.1.3-experimental; eight live CLI/App Code × Web/desktop initiating paths passed, plus independent close/reopen and refusal checks.
+
 ## 0.2.0-rc.2.6 - 2026-10-09
 
 - Separate peer sender/reply metadata from unchanged message text in both Claude bridge directions.

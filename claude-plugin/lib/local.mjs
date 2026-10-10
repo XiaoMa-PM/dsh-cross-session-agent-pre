@@ -6,6 +6,7 @@ import { join, basename } from 'node:path';
 import { execFileSync } from 'node:child_process';
 import net from 'node:net';
 import { randomUUID } from 'node:crypto';
+import { instancePaths, bridgeError } from './instances.mjs';
 
 export const validId = value => typeof value === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
 export const bridgeDirectory = () => process.env.DSH_CLAUDE_BRIDGE_DIR || `/tmp/dsh-claude-${process.getuid()}`;
@@ -76,28 +77,32 @@ export function routeIsOnline(route) {
 
 export function validateMessage(args) {
   const targetValid = args && (validId(args.to) || (typeof args.to === 'string' && args.to.startsWith('session-') && validId(args.to.slice(8))));
-  if (!targetValid || typeof args.content !== 'string' || !args.content.trim() || Buffer.byteLength(args.content) > 16384) throw new Error('Invalid target or message (max 16 KiB)');
+  if (!targetValid || typeof args.content !== 'string' || !args.content.trim() || Buffer.byteLength(args.content) > 16384) throw bridgeError('INVALID_TARGET', 'Invalid target or message (max 16 KiB)');
   return { to: args.to, content: args.content };
 }
 
-export function peerContent(content, from, platform, tool) {
-  const header = { senderPlatform: platform, senderSessionId: from, reply: { tool, to: from }, userApproval: false };
+export function peerContent(content, from, platform, tool, instance) {
+  const address = platform === 'dsh' && instance ? { instanceId: instance.instanceId } : {};
+  const sender = platform === 'dsh' && instance ? { senderInstanceId: instance.instanceId, senderProfileName: instance.profileName } : {};
+  const header = { senderPlatform: platform, senderSessionId: from, ...sender, reply: { tool, to: from, ...address }, userApproval: false };
   return `<dsh-cross-session-agent>${JSON.stringify(header)}</dsh-cross-session-agent>\n\n${content}`;
 }
 
-export function localRequest(dir, payload) {
+export function localRequest(dir, payload, { timeoutMs = 5000 } = {}) {
   ensurePrivateDirectory(dir);
+  let path;
+  try { path = instancePaths(dir, payload.instanceId).socket; } catch (error) { return Promise.reject(error); }
   return new Promise((resolve, reject) => {
-    const socket = net.createConnection(join(dir, 'bridge.sock'));
+    const socket = net.createConnection(path);
     socket.setEncoding('utf8');
     let buffer = '';
-    socket.setTimeout(5000, () => socket.destroy(new Error('Bridge request timed out')));
+    socket.setTimeout(timeoutMs, () => socket.destroy(bridgeError('ETIMEDOUT', 'Bridge request timed out')));
     socket.on('connect', () => socket.write(JSON.stringify(payload) + '\n'));
     socket.on('data', chunk => {
       buffer += chunk;
       if (buffer.length > 65536) socket.destroy(new Error('Invalid bridge response'));
       if (!buffer.includes('\n')) return;
-      try { const result = JSON.parse(buffer.split('\n')[0]); socket.end(); result.ok ? resolve(result.value) : reject(new Error(result.error)); }
+      try { const result = JSON.parse(buffer.split('\n')[0]); socket.end(); result.ok ? resolve(result.value) : reject(bridgeError(result.code || 'REQUEST_REFUSED', result.error)); }
       catch { socket.destroy(new Error('Invalid bridge response')); }
     });
     socket.on('error', reject);

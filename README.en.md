@@ -39,7 +39,7 @@ No GitHub URL is needed:
 2. Enter the npm package name `dsh-cross-session-agent-pre`.
 3. Click **Install**.
 
-The official npm registry provides version `0.2.0-rc.2.6`. If a mainland China mirror reports that the plugin cannot be found, switch the installation source to the **official npm registry** and retry. Mirrors may synchronize later.
+The official npm registry provides version `0.2.0-rc.2.7`. If a mainland China mirror reports that the plugin cannot be found, switch the installation source to the **official npm registry** and retry. Mirrors may synchronize later.
 
 npm package: [dsh-cross-session-agent-pre](https://www.npmjs.com/package/dsh-cross-session-agent-pre).
 
@@ -51,7 +51,7 @@ Run:
 dsh plugin --profile web add dsh-cross-session-agent-pre
 ```
 
-Current published version: `0.2.0-rc.2.6`. Registry mirrors may synchronize later.
+Current published version: `0.2.0-rc.2.7`. Registry mirrors may synchronize later.
 
 Install from GitHub:
 
@@ -160,36 +160,39 @@ Changes target DSH 0.2.0-rc.2 public Session query contracts, inherited fork rec
 
 52 automated cases passed 20 consecutive runs; each run included 2,000 mocked concurrent requests (1,000 accepted and 1,000 rate-limited). Real four-sender fan-in delivered 12 unique messages. Request/reply evidence exists for all six directed combinations of GPT-5.6-Luna, Claude Haiku 4.5 and GLM-5.3-Flash, with fresh-session retests for some directions. Codex subscription pool rate limits and stale instructions after cancellation affected reused-session continuity; successful fresh-session retests do not establish sustained stability. Live steer/inject and long-duration soak testing remain unverified. Transport receipts do not establish task completion.
 
-## Local Claude Code messaging (experimental 0.2.0-rc.2.6)
+## Local Claude Code messaging (experimental 0.2.0-rc.2.7)
 
-The same DSH package includes peer messaging and an opt-in Claude bridge. It defaults off. Install it, open Plugins → Installed → dsh-cross-session-agent-pre, and enable the Claude Code messaging switch once. DSH persists the choice and owns the bridge lifecycle; no manual YAML, source paths, or additional bridge process are required.
+Upgrade the DSH package and companion Claude plugin `0.1.3-experimental` together. The bridge defaults off. Web and desktop profiles can each enable it in the installed-plugin detail page, which displays the instance identity and actual listener state. Follow the Host's native upgrade flow; some builds require uninstalling the plugin before reinstalling it.
 
-On Claude Code 2.1.292+, install the companion plugin once; this command adds the GitHub marketplace and installs at user scope:
+Install in Claude App **Code** or Claude Code CLI:
 
 ```sh
 claude plugin install dsh-cross-session-agent-pre-bridge --marketplace XiaoMa-PM/dsh-cross-session-agent-pre --scope user
 ```
 
-New/resumed Claude CLI and App Code sessions register automatically. Native tool approval remains. Use DSH list_peer_agents with self: true to copy its session-UUID; Claude sends with send_dsh_message. Use Claude bridge_status to get its Claude UUID (not desktop local_ ID); DSH sends with send_claude_message. Request a returned result explicitly.
-
-Validated runtime: DSH 0.2.0-rc.2, Node 24, Cordis 4.0.4+, CLI 2.1.294 and the local Claude App Code. The native Inbox wire is not fully documented, so this is a tested-version experiment. Local messages only; no transcript/file access, remote hosts, own-child token, or approval bypass. Only loaded, ordinary, unarchived DSH targets are accepted. Enable one bridge Host per OS user. written/accepted are transport states, not proof of reading/completion. Same-UID processes are inside the trust boundary.
-
-Paste the command into a Claude App **Code** or Claude Code CLI session and ask it to install for the current user, check that the plugin is enabled, and explain whether a new session is needed. Native approvals still apply.
-
-For a downloaded GitHub source ZIP, extract it locally and give Claude Code the absolute folder path:
+Existing GitHub-marketplace users update, then reopen/resume a session or use `/reload-plugins`:
 
 ```sh
-claude plugin marketplace add /absolute/path/to/dsh-cross-session-agent-pre --scope user
-claude plugin install dsh-cross-session-agent-pre-bridge@dsh-pre-local-experimental --scope user
+claude plugin marketplace update dsh-pre-local-experimental
+claude plugin update dsh-cross-session-agent-pre-bridge@dsh-pre-local-experimental --scope user
 ```
 
-Uploading a ZIP to ordinary Claude Chat does not install a local Code plugin. This is a custom marketplace, not a Claude public-directory listing. One repository contains the DSH npm package and companion Claude marketplace/plugin. The official npm `latest` tag points to 0.2.0-rc.2.6. Bare-name and pinned-version DSH CLI installation and one-command Claude GitHub installation were verified for this release. Native-manager installation was verified on the preceding release.
+A marketplace registered from a local folder stays local when updated; confirm its GitHub source first. Uploading a ZIP to ordinary Claude Chat does not install a Code plugin. An extracted source folder can be installed through the official marketplace commands but will not automatically switch to GitHub.
 
+### Discovery and routing
 
-### 0.2.0-rc.2.6 message format and upgrade
+DSH uses `list_claude_sessions` and `send_claude_message` with the Claude Code UUID, not a desktop `local_` ID. Claude uses `bridge_status` to find the target profile and session in `instances`; `send_dsh_message` requires **instanceId**, to and content. DSH `list_peer_agents` supplies the current session ID in the self row. Reply to the incoming reply address. An unavailable destination returns an error and is never replaced by another instance.
 
-Send tools retain `to` and `content`. The bridge prepends a compact header containing `senderPlatform`, `senderSessionId`, `reply.tool`, `reply.to`, and `userApproval: false`; the body is unchanged. DSH renders Claude Code sender information separately. DSH-to-Claude uses native Inbox; Claude replies use the companion's automatically loaded MCP. No separate manual MCP configuration is required. This does not register DSH as a native `SendMessage` target.
+```json
+{"instanceId":"64-character ID from bridge_status","to":"session-target-UUID","content":"Requested result."}
+```
 
-Inbox accept/hold/refuse controls remain; `written`/`accepted` are transport states, not read or completion receipts. Native CLI comparison and both bridge directions passed real-model acceptance. Desktop UI parity, automatic title/environment registration and Codex distribution are not included.
+The compact envelope includes senderPlatform, senderSessionId, senderInstanceId/profileName for DSH senders, reply.tool, reply.instanceId/to and userApproval=false. The body is unchanged. DSH renders sender information separately. Claude receives through native Inbox; the companion automatically loads the reply MCP. This does not register DSH as a native SendMessage external target.
 
-In DSH install `dsh-cross-session-agent-pre@0.2.0-rc.2.6`, or update through native plugin management. For Claude, run `claude plugin marketplace update dsh-pre-local-experimental`, then `claude plugin update dsh-cross-session-agent-pre-bridge@dsh-pre-local-experimental --scope user`, and reopen a test session. Companion version: `0.1.2-experimental`.
+Inbox accept/hold/refuse and native approvals remain. Peer messages are not user approval. written/accepted do not prove reading, replies or completion. Local same-OS-user messages only; no arbitrary transcript/file access or synchronization of the two homes. Only loaded, ordinary, unarchived DSH sessions are targets. Each profile owns its listener; the old global bridge.sock is not discovered. Disable a previous standalone experimental listener before handing control to the switch.
+
+### Validation
+
+Harness 0.2.0-rc.2, Node 24 and Cordis 4.0.4 were tested on Mac with Claude CLI/App Code and DSH Web/official desktop. Haiku 4.5 and GLM-5.3-Flash passed eight real initiating round-trip paths, plus independent closing and offline refusal. Regression suite: 88/88. See the [validation summary](docs/claude-bridge-validation.md).
+
+The native Inbox wire is not fully documented. Other versions and remote computers remain unverified. Automatic Claude title/environment registration, Codex bridge distribution and Claude public-directory listing are not included.

@@ -15,7 +15,7 @@ test('small bridge server is available without ToolSearch', () => {
 test('MCP sender comes from bound session, not model arguments', async () => {
   const calls = [];
   const handler = createMcpHandler({ identity: () => ({ sessionId: id }), request: async value => { calls.push(value); return { state: 'accepted' }; } });
-  const result = await handler({ id: 1, method: 'tools/call', params: { name: 'send_dsh_message', arguments: { to: id, content: '中文 😀', sender: 'forged' } } });
+  const result = await handler({ id: 1, method: 'tools/call', params: { name: 'send_dsh_message', arguments: { instanceId: 'a'.repeat(64), to: id, content: '中文 😀', sender: 'forged' } } });
   assert.equal(result.result.isError, undefined);
   assert.equal(calls[0].from, id);
   assert.equal(calls[0].content, '中文 😀');
@@ -26,7 +26,7 @@ test('MCP exposes no sender field and rejects invalid target', async () => {
   const handler = createMcpHandler({ identity: () => ({ sessionId: id }), request: async () => { throw new Error('should not send'); } });
   const list = await handler({ id: 1, method: 'tools/list' });
   assert.equal(list.result.tools[0].inputSchema.properties.sender, undefined);
-  const invalid = await handler({ id: 2, method: 'tools/call', params: { name: 'send_dsh_message', arguments: { to: '../x', content: 'text' } } });
+  const invalid = await handler({ id: 2, method: 'tools/call', params: { name: 'send_dsh_message', arguments: { instanceId: 'a'.repeat(64), to: '../x', content: 'text' } } });
   assert.equal(invalid.result.isError, true);
   const init = await handler({ id: 3, method: 'initialize' });
   assert.equal(init.result.capabilities.tools.listChanged, false);

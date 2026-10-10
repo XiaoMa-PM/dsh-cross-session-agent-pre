@@ -53,3 +53,5 @@
 - 2026-10-09 发布审阅修复：双端 UTF-8 流解码；Anatole 批准安全陈旧 socket 检查后一次重绑，不移除活动 Host。
 
 - Claude 桥接结构对齐沿用 native Inbox/MCP，不冒充 Claude 原生目标；来源、回复地址与正文分离，written/accepted 不是已读或完成。
+
+- 多实例候选：每个 profile 独立开关、身份与 socket；Claude 按 instanceId/session 路由，不跨实例兜底。Client 配置通过公开 configForms 保存，运行状态必须依据 Host 实际监听。

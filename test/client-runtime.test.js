@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
+import { Context } from '@deepseek-ai/cordis'
 
 test('会话状态变化只刷新已识别的会话链接，不重新扫描整个页面', async (t) => {
   const original = {
@@ -62,6 +63,9 @@ test('会话状态变化只刷新已识别的会话链接，不重新扫描整�
   const workspaceSubscribers = []
   const cleanups = []
   const configWrites = []
+  const effects = []
+  const stateWrites = []
+  const rpcCalls = []
 
   try {
     globalThis.document = document
@@ -80,7 +84,8 @@ test('会话状态变化只刷新已识别的会话链接，不重新扫描整�
         assert.notEqual(type, undefined, 'React component is undefined')
         return { type, props: { ...props, children } }
       },
-      useState: (value) => [value, () => {}],
+      useEffect: (effect) => { effects.push(effect) },
+      useState: (value) => [value, (next) => { stateWrites.push(next) }],
       useSyncExternalStore: (_subscribe, snapshot) => snapshot(),
     }
     const client = loaded.factory((id) => {
@@ -92,6 +97,14 @@ test('会话状态变化只刷新已识别的会话链接，不重新扫描整�
       throw new Error('unexpected client dependency: ' + id)
     })
     assert.equal(client.name, 'dsh-cross-session-agent-pre-client')
+    await t.test('官方客户端没有 timer 服务时仍激活插件配置', async () => {
+      const actual = new Context()
+      for (const service of ['connection', 'slots', 'sessions', 'inputTriggers', 'workspaces', 'uiWorkspace', 'configForms']) actual.provide(service, {})
+      let activated = false
+      await actual.plugin({ ...client, apply() { activated = true } })
+      try { assert.equal(activated, true, '不应等待官方客户端未提供的 timer 服务') }
+      finally { await actual.fiber.dispose() }
+    })
     const workspaces = {
       list: {
         getSnapshot: () => ({ archivedSessionIds: [] }),
@@ -99,6 +112,10 @@ test('会话状态变化只刷新已识别的会话链接，不重新扫描整�
       },
     }
     const ctx = {
+      connection: { rpc: { call: async (...args) => {
+        rpcCalls.push(args);
+        return { ok: true, value: { instanceId: 'a'.repeat(64), profileName: 'desktop', enabled: true, listening: false } }
+      } } },
       configForms: {
         get: () => ({
           getSnapshot: () => ({ status: 'ready', writable: true, value: { claudeBridge: false } }),
@@ -143,6 +160,26 @@ test('会话状态变化只刷新已识别的会话链接，不重新扫描整�
       assert.equal(input.props.checked, false)
       await input.props.onChange({ currentTarget: { checked: true } })
       assert.deepEqual(configWrites, [{ key: 'claudeBridge', value: true }])
+    })
+    await t.test('实例状态使用公开 RPC，组件卸载终止刷新', async () => {
+      const originalInterval = globalThis.setInterval
+      const originalClear = globalThis.clearInterval
+      let cleared = false
+      globalThis.setInterval = () => 123
+      globalThis.clearInterval = (id) => { assert.equal(id, 123); cleared = true }
+      try {
+        const cleanup = effects[0]()
+        await Promise.resolve()
+        assert.equal(rpcCalls[0][0], '/api')
+        assert.equal(rpcCalls[0][1], 'dsh-cross-session-agent-pre/status')
+        assert.equal(stateWrites.at(-1).listening, false)
+        cleanup()
+        assert.equal(rpcCalls[0][3].aborted, true)
+        assert.equal(cleared, true)
+      } finally {
+        globalThis.setInterval = originalInterval
+        globalThis.clearInterval = originalClear
+      }
     })
     await t.test('新版插件来信使用公开节点渲染并保留发送方跳转', () => {
       for (const key of ['turn-trigger', 'context']) {

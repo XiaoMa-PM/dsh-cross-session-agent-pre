@@ -26,7 +26,7 @@
 2. 在输入框填写 `dsh-cross-session-agent-pre`。
 3. 点击 **安装**。
 
-npm 官方源已提供 `0.2.0-rc.2.6`。如果使用 **中国大陆镜像源** 时提示找不到插件，请将「安装源」切换为 **npm 官方源** 后重试；镜像同步可能晚于官方源。
+npm 官方源已提供 `0.2.0-rc.2.7`。如果使用 **中国大陆镜像源** 时提示找不到插件，请将「安装源」切换为 **npm 官方源** 后重试；镜像同步可能晚于官方源。
 
 npm 包页面：[dsh-cross-session-agent-pre](https://www.npmjs.com/package/dsh-cross-session-agent-pre)。
 
@@ -109,7 +109,7 @@ node scripts/live-profile-e2e.mjs http://127.0.0.1:3080
 
 ## 本地适配验证
 
-当前版本针对 DeepSeek Harness 0.2.0-rc.2。在线与离线回执统一通过公开 sessionQuery 读取，使用 inheritedEventCount 排除 fork 继承事件。跨工作区仅传递消息；get_peer_context 仍限制同工作区。已在独立 test-home 中完成真实模型双向回复、空闲唤醒、运行中 followup 排队、宿主重启恢复、旧回执恢复和跨工作区上下文读取拒绝验收。当前版本 0.2.0-rc.2.6 仅针对 Harness 0.2.0-rc.2。
+当前版本针对 DeepSeek Harness 0.2.0-rc.2。在线与离线回执统一通过公开 sessionQuery 读取，使用 inheritedEventCount 排除 fork 继承事件。跨工作区仅传递消息；get_peer_context 仍限制同工作区。已在独立 test-home 中完成真实模型双向回复、空闲唤醒、运行中 followup 排队、宿主重启恢复、旧回执恢复和跨工作区上下文读取拒绝验收。当前版本 0.2.0-rc.2.7 仅针对 Harness 0.2.0-rc.2。
 
 新版来信通过公开 conversation.chat.node 展示发送方与正文，点击使用 uiWorkspace.openSession 跳转。其他来源保留官方渲染。
 
@@ -119,62 +119,62 @@ node scripts/live-profile-e2e.mjs http://127.0.0.1:3080
 
 Codex 订阅池在测试中多次返回 RATE_LIMIT；复用经历限流/取消的会话时，曾出现旧指令干扰、请求原文转发及错误自发目标。全新会话复测成功，不等于连续多任务稳定性已通过。插件正确拒绝自身投递。steer/inject 目前仅自动化验证，尚未完成真实模型介入和长时间浸泡测试。传输回执不表示对方已读或任务完成。
 
-## Claude Code 本机通信（实验，0.2.0-rc.2.6）
+## Claude Code 本机通信（实验，0.2.0-rc.2.7）
 
-原插件同时包含 DSH 跨会话与 Claude 桥接；安装后默认关闭。支持当前验证的 DSH 0.2.0-rc.2、Claude CLI 2.1.294 / 本机 Claude App Code；Node 24、Cordis 4.0.4+。
+一个仓库提供 DSH 插件与 Claude 配套 `0.1.3-experimental`，两侧一起升级。桥接默认关闭；Web 和桌面可分别开启，配置独立持久保存。详情页显示本实例名称、ID 和实际监听状态。
 
-1. 在 DSH 安装本插件，进入 **插件 → 已安装 → dsh-cross-session-agent-pre** 的详情页，开启 **开启 Claude Code 本机通信（实验）** 一次。配置由 DSH 持久保存；无需手写 YAML、源码绝对路径或启动另一桥接进程。
-2. 在 Claude Code 2.1.292+ 安装配套插件一次。无需公共目录收录，一条命令同时添加此 GitHub 市场并安装用户级插件：
+1. DSH 安装 `dsh-cross-session-agent-pre@0.2.0-rc.2.7`，进入插件详情，开启 **Claude Code 本机通信（实验）**。已有版本按宿主原生升级流程操作；有些宿主要求卸载插件后重新安装。
+2. 在 Claude App 的 **Code** 或 Claude Code CLI 安装配套插件：
 
 ```sh
 claude plugin install dsh-cross-session-agent-pre-bridge --marketplace XiaoMa-PM/dsh-cross-session-agent-pre --scope user
 ```
 
-3. 新建或正常恢复 Claude 会话使插件加载；桌面 Code 与 CLI 使用相同用户级插件，首次工具审批保留。
-4. DSH 调用 list_peer_agents，取 self: true 的完整 session-UUID，交给 Claude 调用 send_dsh_message。反向用 Claude bridge_status 的 claudeSessionId（不是桌面 local_ ID），交给 DSH 调用 send_claude_message。要回复时明确要求回传结果。
-
-仅本机消息，不读其他工作区的历史或文件。DSH 目标必须已加载且未归档。written / accepted 不代表已读或任务完成。保留 Claude accept/hold/refuse，不发送 own-child token。官方未公开完整 Inbox wire，所以是当前版本实验，不承诺其他版本或跨电脑；同 OS 用户进程属于信任边界。同用户只启用一个 DSH profile 的 Claude 桥接，避免重复监听。
-
-### 交给 Claude Code 代为安装
-
-将下面这段话粘贴到 Claude App 的 **Code** 会话或 Claude Code CLI 会话；不是普通 Claude Chat：
-
-```text
-请为当前用户安装 DSH 本机通信插件，执行：
-claude plugin install dsh-cross-session-agent-pre-bridge --marketplace XiaoMa-PM/dsh-cross-session-agent-pre --scope user
-安装后检查插件是否启用，并告诉我是否需要重新打开会话。不要修改 DSH 模型或权限配置。
-```
-
-需要离线交付时，可下载 GitHub Release 的源码 ZIP 并解压，告诉 Claude Code 解压后的绝对路径，执行：
+3. 已使用本 GitHub 市场的用户，执行以下命令，再新建/正常恢复会话或使用 `/reload-plugins`：
 
 ```sh
-claude plugin marketplace add /absolute/path/to/dsh-cross-session-agent-pre --scope user
-claude plugin install dsh-cross-session-agent-pre-bridge@dsh-pre-local-experimental --scope user
+claude plugin marketplace update dsh-pre-local-experimental
+claude plugin update dsh-cross-session-agent-pre-bridge@dsh-pre-local-experimental --scope user
 ```
 
-不需要把 ZIP 上传到聊天窗口；本机文件夹路径才是安装来源。这里是自建市场安装，尚未进入 Claude 公共目录。一个仓库同时提供 DSH npm 包、Claude 市场入口和配套插件。
+若旧市场来自本地目录，以上 update 仍然更新本地来源；应确认来源为本项目 GitHub 市场后再升级。普通 Claude Chat 接收 ZIP 不会安装 Code 插件。源码 ZIP 解压后的本机目录也可通过官方 marketplace add/install 安装，但该来源不会自动切换为 GitHub。
 
-npm 官方源的 `latest` 已指向 `0.2.0-rc.2.6`；本轮 DSH 裸包名与指定版本安装均已核验，原生插件管理安装在上一版本已核验。Claude GitHub 单命令安装已核验；此插件未被 Claude 公共目录收录。
+### 定位会话与发送
 
+- DSH→Claude：调用 `list_claude_sessions` 取得 Claude Code UUID，然后 `send_claude_message`。桌面 `local_` ID 不是通信地址。
+- Claude→DSH：调用 `bridge_status`，按 `instances` 中的 profileName、instanceId 与 dshSessions 定位目标；调用 `send_dsh_message` 时 **instanceId 必填**。
+- DSH 的 `list_peer_agents` 中 `self: true` 提供当前完整 Session ID。回复时使用来信携带的 reply 地址；目标不可用会报错，不会转发到别的实例。
 
-### 0.2.0-rc.2.6 消息格式与升级
-
-本版本让桥接更接近 SendMessage 的来源与回复模式。发送工具仍接受 `to` 和 `content`：
+DSH 发往 Claude 的工具参数：
 
 ```json
-{"to":"目标会话 ID","content":"请把测试结果回复给我。"}
+{"to":"Claude Code UUID","content":"请回传测试结果。"}
 ```
 
-传输时由插件添加简短来源头部，正文保持原样。例如 DSH 发往 Claude：
+Claude 发往 DSH 的工具参数：
+
+```json
+{"instanceId":"bridge_status 返回的64位实例ID","to":"session-目标UUID","content":"测试结果。"}
+```
+
+### 消息结构与权限
+
+由插件添加紧凑来源/回复头部，正文保持原样。例如 DSH→Claude：
 
 ```text
-<dsh-cross-session-agent>{"senderPlatform":"dsh","senderSessionId":"session-发送方UUID","reply":{"tool":"send_dsh_message","to":"session-发送方UUID"},"userApproval":false}</dsh-cross-session-agent>
+<dsh-cross-session-agent>{"senderPlatform":"dsh","senderSessionId":"session-发送方UUID","senderInstanceId":"64位实例ID","senderProfileName":"desktop","reply":{"tool":"send_dsh_message","to":"session-发送方UUID","instanceId":"64位实例ID"},"userApproval":false}</dsh-cross-session-agent>
 
-请把测试结果回复给我。
+请回传测试结果。
 ```
 
-Claude 发往 DSH 的头部使用 `senderPlatform: "claude-code"`，回复工具为 `send_claude_message`。DSH 界面将来源标签与正文分开展示。Claude 通过原生 Inbox 接收，回复通过配套插件自动加载的 MCP；无需另外手写 MCP 配置。这不是将 DSH 注册为 Claude 原生 `SendMessage` 目标。
+Claude→DSH 使用 `senderPlatform: "claude-code"`，回复工具为 `send_claude_message`；DSH 将来源和正文分开展示。Claude 入站仍走原生 Inbox，回传 MCP 由配套插件封装，无需手写 MCP 配置。这不是把 DSH 注册为 Claude 原生 SendMessage 外部目标。
 
-保留 accept/hold/refuse；来源头部不代表人类授权。`written` / `accepted` 仅表示传输受理，不代表已读、回复或完成。新格式的 CLI 原生并排及两方向桥接已实测；本轮没有保证桌面 UI 完全一致。自动标题/环境字段登记与 Codex 桥接不在本版本内。
+保留 accept/hold/refuse 和原生审批；peer 消息不代表用户授权。`written/accepted` 不表示已读、回复或任务完成。仅本机同 OS 用户；不读取其他工作区历史/文件，不同步两端数据。目标 DSH 会话必须已加载、普通且未归档。
 
-DSH 安装页输入 `dsh-cross-session-agent-pre@0.2.0-rc.2.6`；已有安装使用原生插件管理的更新操作，桥接仍需开启。Claude 已安装用户执行 `claude plugin marketplace update dsh-pre-local-experimental` 后执行 `claude plugin update dsh-cross-session-agent-pre-bridge@dsh-pre-local-experimental --scope user`，再重新打开测试会话；配套版本为 `0.1.2-experimental`。
+本版本使用每 profile 独立监听，不读取旧全局 `bridge.sock`。从独立实验配置升级时，应停用旧实验监听后让插件开关接管；不要直接删除其他在线实例的 socket。
+
+### 验证范围
+
+针对 Harness `0.2.0-rc.2`、Node 24、Cordis 4.0.4，在 Mac 上验证 Claude CLI/App Code 与 DSH Web/官方桌面：使用 Haiku 4.5 和 GLM-5.3-Flash，双方主动共 8 条路径真实回传通过。完整回归 88/88；关闭单端不影响另一端，离线目标不改投。详见 [验收摘要](docs/claude-bridge-validation.md)。
+
+原生 Inbox wire 未完整公开，其他版本与跨电脑尚待验证。Claude 自动标题/环境登记的后续迭代、Codex 桥接发行与 Claude 公共目录收录不包含在本版本。

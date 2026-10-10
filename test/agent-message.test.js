@@ -32,6 +32,7 @@ function setup({ agents: initialAgents = [], services = {}, config = {} } = {}) 
   const listeners = new Map()
   const effects = []
   const ctx = {
+    inject() {},
     agents: {
       get: (id) => agentMap.get(String(id)),
       list: () => [...agentMap.values()],

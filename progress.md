@@ -1,5 +1,67 @@
 # Progress
 
+## 2026-10-10 — rc.2.7 发行授权与准备
+
+- Anatole选择先公开已验收rc.2.7，再提交社区收录；Claude配套0.1.3，两侧文档明确必填instanceId、独立开关和旧实验监听迁移。
+- 公开发行提交排除本机截图、合成验收进程控制脚本、机器配置和同步调研的本地资料。新增脱敏验收摘要，保留88/88与8条真实路径证据范围。
+- GitHub公开main与本地HEAD基线一致；npm登录失效，需要官方重新登录及发布授权。社区YAML已准备但尚未创建PR。
+
+## 2026-10-10 — 桌面/Web同步关系调研与工作沉淀
+
+- 用户指定Luna只读调研，因额度限制失败；主循环补查当前官方主线文档、社区原帖及本机profile manifest。
+- 本机官方桌面home为~/.dsh，3085 Web为独立test-home。官方共享Web界面不等于全量同步；同home支持的产品数据与分别拥有的插件依赖/激活要分开讨论。当前桥接只做消息互通，不同步历史和配置。
+- 社区#1485是旧版/第三方桌面壳共享存储个案，#8904是官方Windows rc.2插件加载个案；没有把它们当全部用户或当前Mac必现问题。第三方同步插件涉及凭据复制和覆盖，未安装/验证。
+- 沉淀docs/2026-10-10-bridge-retrospective.md与docs/2026-10-10-desktop-web-sync-research.md，包含权限边界、真实8条往返、88/88回归、17/17独立复核与未完成事项。
+- 定时社区任务已核验XiaoMa-PM、仓库满一天、rc.2.6 GitHub/npm实际下载、topic及规则；无同目标条目/开放PR。独立fork分支只准备指定YAML，未提交/创建PR。公开rc.2.6客户端加载问题尚未公开修复，已请求“先发rc.2.7再收录”或“rc.2.6草稿注明问题”的决策；不擅自发布新版。
+
+## 2026-10-10 — 日常双实例模型验收完成
+
+- 经明确批准移除Web唯一claude-bridge-experimental并重载3085，恢复Claude登录。两端插件rc.2.7独立监听，配套Claude0.1.3已安装。
+- CLI/App Code × Web/桌面双方主动共8条路径真实回传通过，Haiku4.5/GLM-5.3-Flash；App原生Inbox头部来源/reply与userApproval=false核验，模型均走原生桥接工具。
+- 关闭Web后桌面继续在线，指定已注销Web返回UNKNOWN_INSTANCE且不改投；恢复Web。完整88/88，独立最终17/17无重要缺陷。
+- CLI专用验收进程结束，用户App测试会话保留，两端开关恢复开启。报告outputs/rc27-local-acceptance.md及本地截图。未公开发布，Claude仍是固定本地候选源，发布时需恢复GitHub。
+
+## 本轮 — 日常候选更新（模型验收待登录与旧配置迁移）
+
+- Anatole明确批准更新三端并重载；桌面通过原生管理器本地固定目录安装rc.2.7，Claude桥接开关与实例身份可见，监听true。官方卸载首次受旧版发布年龄校验影响并回滚不完整，重载后通过原生流程清理异常登记并安装成功；未放宽年龄策略。
+- Web test-home旧别名包已换成rc.2.7；经Anatole明确批准该数据目录及原凭据引用恢复3085。新开关已开启，但旧claude-bridge-experimental插入仍抢先监听，新开关状态因此不一致。自动审批拒绝移除旧条目，尚未修改；已提出唯一旧条目移除+重载的具体确认。
+- 经Anatole具体批准，Claude同名市场临时改为固定本地候选目录，官方CLI安装0.1.3-experimental并enabled；其他插件不动。公开发布后需恢复GitHub市场来源。
+- 两个实例登记在线，ID分别为desktop <instance-id>、web <instance-id>。这仅是登记与监听证据，不代表模型往返完成。
+- 官方Claude auth status当前loggedIn=false，已请求本机claude auth login。真实模型双向验收待登录和Web旧条目迁移；没有公开发布。~/.Codex/setup.md已同步候选来源和状态。
+
+## 2026-10-09 — 已批准状态入口修复及真实启停验证
+
+- Anatole批准只读状态改用官方认证/api扩展。正式入口/api/dsh-cross-session-agent-pre/status，Client继续用公开Connection RPC；未登录401，认证后返回实例身份、配置开启与实际监听，无路径或对话。
+- 真实Host开关开启后监听仍退出，临时诊断捕获子插件TypeError Invalid effect。根因是桥接apply返回普通身份对象，违反真实Cordis初始化返回值合同，宿主随即卸载监听。移除返回对象，测试地址改由测试fixture推导；新增真实Cordis生命周期RED→GREEN。
+- 修复后隔离3103官方包安装、开启持久化重启、关闭→开启→关闭均通过，enabled/listening对应变化，instanceId稳定。完整88/88、差异检查通过。
+- 日常桌面/Web/Claude未升级；跨两端实际模型往返尚待候选安装与重载后验收，未发布。临时诊断日志仅副本，正式包无诊断代码。
+
+## 2026-10-09 — 重试真实状态接口（未闭环）
+
+- 临时诊断副本在隔离3103实际 Host 证实 configure 与子作用域均进入；scoped.webServer 可访问，但官方 Connection rpc.handle 注册仍报 cannot get property "webServer" without inject，HTTP405。补依赖/移除重复effect均未消除实际错误，不能把时序单测当根因已修复。
+- 正式源码无诊断日志；路由/状态/Client 回归88项已通过。临时包仅安装rc26-bare-home测试profile，日常3085、桌面与用户Claude未更新。
+- 已请求状态展示入口的小范围决策：改用官方认证 /api 的只读状态扩展，或继续调查原通道；消息传输与权限不变。真实桌面/Web双向验收尚未完成，未发布。
+
+## 2026-10-09 — 多实例核心与桌面配置根因（验收中）
+
+- 已实现稳定 profile 实例 ID、独立登记与 socket、Claude 聚合发现及精确实例投递；不使用旧全局 bridge.sock。实例不响应时返回 INSTANCE_OFFLINE，不改投其他实例。
+- 独立审阅发现 status 请求未统一验证实例、超时未分类两项问题，均已修复并回归。
+- 桌面配置缺失复现为 Client 强依赖官方前端未提供的 timer 服务；真实 Cordis 注入测试先失败，移除依赖并使用 React effect/native timer 后通过。并非 platform:web 声明错误。
+- 当前完整回归 85/85，独立定向 25/25。配置实例信息/运行状态展示与真实双端模型验收仍待完成；未更新日常环境、未发布。
+
+## 2026-10-09 — 多实例桥接设计确认
+
+- Anatole 确认 Web/桌面同时接入、按实例与会话路由，在各端插件控制开启；不再转移唯一桥接归属。
+- 复用 adapt-dsh-020 隔离 worktree；公开 profileContext 提供稳定 profile 身份资料，桌面官方复用 Web Client，不能据 platform=web 下结论。
+- 授权本机 socket 的完整基线为 77/77。设计已保存 docs/plans/2026-10-09-multi-instance-claude-bridge-design.md；实现尚未开始，按 brainstorming 的书面设计复核阶段等待用户审阅。
+
+## 2026-10-09 — 用户桌面实测失败排查（未闭环）
+
+- 用户桌面 DSH 已安装并启用 rc.2.6，但插件详情未显示 Claude opt-in 配置区；尚未确认 Client 配置组件缺失原因。
+- 当前 /tmp/dsh-claude-501/bridge.sock 监听属于 PID86934 的 3085 Web Host，而用户发送方在 DSH 桌面 Host。Claude connected=true 仅代表接上该 Web Host；发送方不在列表不能据此推断用户会话已结束或 ID 变化。
+- 截图显示 DSH 先误用导入，纠正后通过脚本 writeClaudeInbox 发出；原生 send_claude_message 工具是否加载需核实。直接写入成功不能证明反向路由可用。
+- 已向 Anatole 请求唯一桥接归属决策：建议 Web 保持运行，仅关闭其 Claude 桥接，切换桌面后双向验收。未关闭服务、未修改开关、未删除导入会话；尚未修复或发布。
+
 ## 2026-10-09 — rc.2.6 公开发布与安装验证完成
 
 - GitHub源码487f4f4、Release v0.2.0-rc.2.6与npm latest=0.2.0-rc.2.6已公开。SHA1 ae5a566382045dde19d8b24737c0dc6985dd4002，GitHub SHA256 d8c4b441dd01ea92e3a655328060efa550f4db814cc5943cecd27158645bbe3a；同一安装包。

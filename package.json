@@ -1,6 +1,6 @@
 {
   "name": "dsh-cross-session-agent-pre",
-  "version": "0.2.0-rc.2.6",
+  "version": "0.2.0-rc.2.7",
   "packageManager": "pnpm@11.1.1",
   "description": "Unofficial bounded peer discovery, messaging, receipts, and safe context projection for DeepSeek Harness agents.",
   "keywords": [
@@ -48,7 +48,8 @@
     "docs/assets/message-header-navigation.jpg",
     "lib",
     "claude-plugin",
-    ".claude-plugin/marketplace.json"
+    ".claude-plugin/marketplace.json",
+    "docs/claude-bridge-validation.md"
   ],
   "publishConfig": {
     "access": "public"

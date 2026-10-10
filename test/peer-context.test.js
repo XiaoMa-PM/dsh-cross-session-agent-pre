@@ -35,6 +35,7 @@ function setupContextTool({ caller = agent('session-caller'), target, records, s
     ...services.sessionQuery,
   }
   apply({
+    inject(deps) { assert.deepEqual(deps, ['connection', 'profileContext']) },
     agents: { get: (id) => agents.get(String(id)), list: () => [...agents.values()] },
     tools: { register: (tool) => tools.set(tool.name, tool) },
     get(name) {

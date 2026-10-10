@@ -1,5 +1,12 @@
 # Progress
 
+## 2026-10-10 — rc.2.7 公开发行与社区PR提交
+
+- 发布源码680ee76、GitHub预发布v0.2.0-rc.2.7和npm latest=0.2.0-rc.2.7；GitHub/npm下载与本地tarball SHA256一致：e3519be87c50b8c861adc730c9c04d46a09068ddb49f23575b995cae4f5c20e5。
+- Claude同名市场恢复到XiaoMa-PM GitHub，配套0.1.3-experimental已启用；未发布本机截图/脚本/配置资料。公开文档明确两侧同步升级及必填instanceId。
+- 新隔离profile官方DSH命令安装公开npm rc.2.7成功。pnpm11.7默认策略自动写入该版本的minimumReleaseAgeExclude，未更改日常profile年龄策略；严格策略的宿主可能仍需等待发布时间门槛。
+- 社区PR https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/7003 ，仅指定YAML，已attach；自动化dsh设为PAUSED。CI与维护者审核状态需要区分，提交不等于收录。
+
 ## 2026-10-10 — rc.2.7 发行授权与准备
 
 - Anatole选择先公开已验收rc.2.7，再提交社区收录；Claude配套0.1.3，两侧文档明确必填instanceId、独立开关和旧实验监听迁移。
